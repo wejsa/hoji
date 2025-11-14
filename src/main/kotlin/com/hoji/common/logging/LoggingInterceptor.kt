@@ -1,5 +1,6 @@
 package com.hoji.common.logging
 
+import com.hoji.config.properties.LoggingProperties
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -15,7 +16,9 @@ private val logger = KotlinLogging.logger {}
  * 요청/응답 로깅 인터셉터
  */
 @Component
-class LoggingInterceptor : HandlerInterceptor {
+class LoggingInterceptor(
+    private val loggingProperties: LoggingProperties
+) : HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         val startTime = System.currentTimeMillis()
@@ -104,8 +107,7 @@ class LoggingInterceptor : HandlerInterceptor {
     }
 
     private fun isSensitiveHeader(headerName: String): Boolean {
-        val sensitiveHeaders = listOf("authorization", "cookie", "set-cookie", "x-api-key", "x-auth-token")
-        return sensitiveHeaders.any { it.equals(headerName, ignoreCase = true) }
+        return loggingProperties.sensitiveHeaders.any { it.equals(headerName, ignoreCase = true) }
     }
 
     private fun getRequestBody(request: ContentCachingRequestWrapper): String {

@@ -82,6 +82,19 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
+# Custom Application Properties
+hoji:
+  logging:
+    # 민감정보 마스킹 대상 헤더 목록
+    sensitive-headers:
+      - authorization
+      - cookie
+      - set-cookie
+      - x-api-key
+      - x-auth-token
+      - x-csrf-token
+      - proxy-authorization
+
 # SpringDoc OpenAPI
 springdoc:
   api-docs:

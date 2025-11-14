@@ -23,3 +23,10 @@ logging:
   level:
     root: INFO
     com.hoji: DEBUG
+
+hoji:
+  logging:
+    sensitive-headers:
+      - authorization
+      - cookie
+      - x-api-key
