@@ -1,22 +1,21 @@
+# ===================================================================
 # Local 개발 환경 설정
+# ===================================================================
 
 spring:
-  # H2 Console 활성화 (로컬 개발용)
   h2:
     console:
       enabled: true
       path: /h2-console
 
-  # JPA 설정
   jpa:
     hibernate:
-      ddl-auto: create-drop  # 로컬에서는 매번 새로 생성
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
-        show_sql: true  # 로컬에서는 콘솔에 SQL 출력
+        show_sql: true  # 콘솔 SQL 출력
 
-# Actuator - 로컬에서는 모든 정보 노출
 management:
   endpoints:
     web:
@@ -27,7 +26,6 @@ management:
       show-details: always
       show-components: always
 
-# Logging - 상세 로깅
 logging:
   level:
     root: INFO
@@ -36,18 +34,15 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
-# 민감정보 마스킹 - 로컬에서는 최소화
 hoji:
   logging:
     sensitive-headers:
       - authorization
       - x-api-key
 
-# Server
 server:
-  port: 8080
   error:
     include-message: always
     include-binding-errors: always
-    include-stacktrace: always  # 로컬에서는 항상 스택트레이스 포함
+    include-stacktrace: always
     include-exception: true
