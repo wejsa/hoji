@@ -1,0 +1,48 @@
+# ===================================================================
+# Local 개발 환경 설정
+# ===================================================================
+
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true  # 콘솔 SQL 출력
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # 모든 엔드포인트 노출
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+
+logging:
+  level:
+    root: INFO
+    com.hoji: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+hoji:
+  logging:
+    sensitive-headers:
+      - authorization
+      - x-api-key
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always
+    include-exception: true

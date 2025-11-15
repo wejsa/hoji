@@ -1,44 +1,38 @@
+# ===================================================================
+# 공통 설정 (모든 환경에서 사용)
+# 환경별 차이는 application-{profile}.yml 파일 참조
+# ===================================================================
+
 spring:
   application:
     name: hoji
 
-  # Redis와 RabbitMQ를 사용하지 않을 경우 자동 설정 제외
+  # Redis와 RabbitMQ 자동 설정 제외
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
       - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
 
-  # H2 Database
+  # H2 Database (공통)
   datasource:
     url: jdbc:h2:mem:hoji
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
-  # H2 Console
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
-  # JPA
+  # JPA (공통 설정)
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create-drop
     properties:
       hibernate:
-        format_sql: true
-        show_sql: false
         use_sql_comments: true
     open-in-view: false
 
-  # Redis (Optional - 사용하지 않을 경우 주석 처리)
+  # Redis (선택적 - 사용 시 환경별 override 가능)
   data:
     redis:
       host: localhost
       port: 6379
-      password:
       timeout: 3000ms
       lettuce:
         pool:
@@ -46,7 +40,7 @@ spring:
           max-idle: 8
           min-idle: 0
 
-  # RabbitMQ (Optional - 사용하지 않을 경우 주석 처리)
+  # RabbitMQ (선택적 - 사용 시 환경별 override 가능)
   rabbitmq:
     host: localhost
     port: 5672
@@ -63,37 +57,15 @@ spring:
           initial-interval: 3000
           max-attempts: 3
 
-# Actuator
+# Actuator (공통)
 management:
   endpoints:
     web:
-      exposure:
-        include: health,info,metrics,prometheus
+      base-path: /actuator
   endpoint:
     health:
-      show-details: always
-
-# Logging
-logging:
-  level:
-    root: INFO
-    com.hoji: DEBUG
-    org.springframework.web: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
-# Custom Application Properties
-hoji:
-  logging:
-    # 민감정보 마스킹 대상 헤더 목록
-    sensitive-headers:
-      - authorization
-      - cookie
-      - set-cookie
-      - x-api-key
-      - x-auth-token
-      - x-csrf-token
-      - proxy-authorization
+      probes:
+        enabled: true  # Kubernetes liveness/readiness 프로브
 
 # SpringDoc OpenAPI
 springdoc:
@@ -108,8 +80,9 @@ springdoc:
 # Server
 server:
   port: 8080
-  error:
-    include-message: always
-    include-binding-errors: always
-    include-stacktrace: on_param
-    include-exception: false
+  shutdown: graceful  # 우아한 종료
+
+# Graceful Shutdown 설정
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s  # 종료 대기 시간

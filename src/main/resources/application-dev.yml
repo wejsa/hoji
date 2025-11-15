@@ -1,0 +1,56 @@
+# ===================================================================
+# Dev 개발 서버 환경 설정
+# ===================================================================
+
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false  # 외부 접근 차단
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: false  # 파일 로그만
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,loggers
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: when-authorized
+
+logging:
+  level:
+    root: INFO
+    com.hoji: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  file:
+    name: logs/hoji-dev.log
+
+hoji:
+  logging:
+    sensitive-headers:
+      - authorization
+      - cookie
+      - set-cookie
+      - x-api-key
+      - x-auth-token
+      - x-csrf-token
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on_param
+    include-exception: false
