@@ -1,0 +1,73 @@
+# Production 운영 환경 설정
+
+spring:
+  # H2 Console 비활성화 (보안)
+  h2:
+    console:
+      enabled: false
+
+  # JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: validate  # 운영에서는 스키마 검증만 수행
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+    open-in-view: false
+
+# Actuator - 최소한의 정보만 노출
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus  # 최소한의 엔드포인트만 노출
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: never  # 상세 정보 숨김 (보안)
+      show-components: never
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Logging - 간결한 로깅
+logging:
+  level:
+    root: WARN
+    com.hoji: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
+  file:
+    name: logs/hoji-prod.log
+
+# 민감정보 마스킹 - 강화된 설정
+hoji:
+  logging:
+    sensitive-headers:
+      - authorization
+      - cookie
+      - set-cookie
+      - x-api-key
+      - x-auth-token
+      - x-csrf-token
+      - proxy-authorization
+      - x-forwarded-for
+      - x-real-ip
+      - api-key
+      - access-token
+      - refresh-token
+
+# Server
+server:
+  port: 8080
+  error:
+    include-message: never  # 보안을 위해 에러 메시지 숨김
+    include-binding-errors: never
+    include-stacktrace: never  # 스택트레이스 절대 노출 안함
+    include-exception: false
+  compression:
+    enabled: true  # 응답 압축 활성화
+  http2:
+    enabled: true  # HTTP/2 활성화

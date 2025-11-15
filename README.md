@@ -111,14 +111,33 @@ src/main/kotlin/com/hoji/
 ```
 
 ### 실행
+
+#### 기본 실행 (기본 프로파일)
 ```bash
 ./gradlew bootRun
 ```
 
-또는
-
+#### 환경별 실행
 ```bash
-java -jar build/libs/hoji-0.0.1-SNAPSHOT.jar
+# Local 환경
+./gradlew bootRun --args='--spring.profiles.active=local'
+
+# Dev 환경
+./gradlew bootRun --args='--spring.profiles.active=dev'
+
+# Prod 환경
+./gradlew bootRun --args='--spring.profiles.active=prod'
+```
+
+#### JAR 실행
+```bash
+# 빌드
+./gradlew build
+
+# 환경별 실행
+java -jar build/libs/hoji-0.0.1-SNAPSHOT.jar --spring.profiles.active=local
+java -jar build/libs/hoji-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
+java -jar build/libs/hoji-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 ```
 
 ## API 문서
@@ -130,9 +149,31 @@ java -jar build/libs/hoji-0.0.1-SNAPSHOT.jar
 
 ## API 엔드포인트
 
-### Health Check
+### Health Check (Actuator)
 ```
-GET /api/v1/health
+GET /actuator/health              # 전체 헬스 체크
+GET /actuator/health/liveness     # Kubernetes Liveness Probe
+GET /actuator/health/readiness    # Kubernetes Readiness Probe
+```
+
+응답 예시:
+```json
+{
+  "status": "UP",
+  "components": {
+    "custom": {
+      "status": "UP",
+      "details": {
+        "application": "hoji",
+        "status": "healthy",
+        "timestamp": "2024-01-01T00:00:00"
+      }
+    },
+    "db": {
+      "status": "UP"
+    }
+  }
+}
 ```
 
 ### User API
@@ -144,48 +185,117 @@ PUT    /api/v1/users/{id}         # 사용자 수정
 DELETE /api/v1/users/{id}         # 사용자 삭제
 ```
 
-### Actuator
+### Actuator (기타)
 ```
-GET /actuator/health              # 헬스 체크
 GET /actuator/info                # 애플리케이션 정보
 GET /actuator/metrics             # 메트릭
+GET /actuator/prometheus          # Prometheus 메트릭
 ```
+
+**참고**: Actuator 엔드포인트 노출은 환경별로 다릅니다.
+- Local: 모든 엔드포인트 노출
+- Dev: health, info, metrics, prometheus, env, loggers
+- Prod: health, info, metrics, prometheus (최소)
 
 ## H2 Console
 
-개발 환경에서 H2 콘솔에 접근할 수 있습니다:
+H2 콘솔 접근 (환경별로 다름):
 
+**Local/Dev 환경**:
 - URL: http://localhost:8080/h2-console
 - JDBC URL: `jdbc:h2:mem:hoji`
 - Username: `sa`
 - Password: (비어있음)
 
-## 환경 설정
+**Prod 환경**: 보안을 위해 비활성화됨
+
+## 환경별 설정
+
+### 프로파일 구성
+
+프로젝트는 다음 환경별 설정 파일을 제공합니다:
+
+| 파일 | 환경 | 설명 |
+|------|------|------|
+| `application.yml` | 공통 | 모든 환경에서 사용하는 기본 설정 |
+| `application-local.yml` | Local | 로컬 개발 환경 (H2 콘솔, 상세 로깅, 전체 스택트레이스) |
+| `application-dev.yml` | Dev | 개발 서버 (H2 콘솔, 적당한 로깅) |
+| `application-prod.yml` | Prod | 운영 서버 (보안 강화, 최소 로깅, 에러 정보 비노출) |
+
+### 환경별 주요 차이점
+
+#### Local 환경
+- H2 콘솔: 활성화
+- 로깅 레벨: DEBUG (상세)
+- SQL 로깅: 콘솔 출력
+- 에러 스택트레이스: 항상 노출
+- Actuator: 모든 엔드포인트 노출
+- 민감정보 마스킹: 최소화
+
+#### Dev 환경
+- H2 콘솔: 활성화 (외부 접근 차단)
+- 로깅 레벨: DEBUG
+- SQL 로깅: 파일만
+- 에러 스택트레이스: 파라미터로 제어
+- Actuator: 주요 엔드포인트만 노출
+- 민감정보 마스킹: 표준
+
+#### Prod 환경
+- H2 콘솔: 비활성화
+- 로깅 레벨: WARN/INFO (최소)
+- SQL 로깅: 비활성화
+- 에러 스택트레이스: 절대 노출 안함
+- Actuator: 최소 엔드포인트만 노출
+- 민감정보 마스킹: 강화
+- 응답 압축: 활성화
+- HTTP/2: 활성화
 
 ### Redis 및 RabbitMQ 비활성화
 
-Redis나 RabbitMQ를 사용하지 않는 경우, `application.yml`에서 다음을 추가하세요:
-
-```yaml
-spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
-      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
-```
-
-또는 해당 설정의 `@ConditionalOnProperty`에 의해 자동으로 비활성화됩니다.
+기본적으로 Redis와 RabbitMQ 자동 설정이 제외되어 있습니다.
+사용하려면 `application.yml`에서 해당 설정의 `autoconfigure.exclude`를 제거하세요.
 
 ## 로깅
 
-- Console 로그: 개발 환경에서 활성화
-- File 로그: `logs/hoji.log`
-- Error 로그: `logs/hoji-error.log`
-- 로그 파일은 일별로 로테이션되며, 최대 30일간 보관됩니다.
+### 로그 파일
+- 일반 로그: `logs/hoji.log` (또는 환경별 `logs/hoji-{profile}.log`)
+- 에러 로그: `logs/hoji-error.log`
+- 로테이션: 10MB 단위로 파일 분할
+- 보관 기간: 최대 30일
+
+### 환경별 로깅 레벨
+- **Local**: DEBUG (상세), SQL 콘솔 출력
+- **Dev**: DEBUG, SQL 파일 출력
+- **Prod**: WARN/INFO (최소), SQL 비활성화
+
+### 민감정보 마스킹
+`application.yml`에서 설정 가능:
+```yaml
+hoji:
+  logging:
+    sensitive-headers:
+      - authorization
+      - cookie
+      - x-api-key
+      # ... 추가 가능
+```
+
+환경별로 다른 마스킹 정책 적용 가능합니다.
 
 ## 주요 특징
 
-### 1. 공통 응답 구조
+### 1. 환경별 설정 관리
+- Local, Dev, Prod 환경별로 독립적인 설정 파일
+- 프로파일 기반 자동 설정 적용
+- 환경별 보안 정책 및 로깅 레벨 관리
+
+### 2. Spring Boot Actuator 헬스 체크
+- 표준 HealthIndicator 인터페이스 구현
+- Kubernetes liveness/readiness 프로브 지원
+- 커스텀 헬스 체크 로직 확장 가능
+- DB, Redis 등 자동 헬스 체크 통합
+
+### 3. 공통 응답 구조
 모든 API는 일관된 응답 구조를 사용합니다:
 ```json
 {
@@ -197,17 +307,25 @@ spring:
 }
 ```
 
-### 2. 전역 예외 처리
+### 4. 전역 예외 처리
 `@RestControllerAdvice`를 통해 모든 예외를 일관되게 처리합니다.
 
-### 3. 요청/응답 로깅
-모든 HTTP 요청과 응답을 자동으로 로깅합니다 (민감한 헤더는 마스킹).
+### 5. 요청/응답 로깅
+모든 HTTP 요청과 응답을 자동으로 로깅합니다:
+- 민감한 헤더는 자동 마스킹 (설정 가능)
+- 요청/응답 본문 캐싱 및 로깅
+- 처리 시간 측정
 
-### 4. 헤더 컨텍스트
+### 6. 헤더 컨텍스트 관리
 `X-Request-ID`, `X-User-ID` 등의 헤더를 ThreadLocal에 저장하여 전역에서 접근 가능합니다.
 
-### 5. QueryDSL
+### 7. QueryDSL
 타입 안전한 쿼리를 작성할 수 있습니다.
+
+### 8. 운영 환경 최적화
+- Prod 환경에서 보안 강화 (에러 정보 비노출)
+- 응답 압축 및 HTTP/2 지원
+- 최소한의 Actuator 엔드포인트만 노출
 
 ## 라이센스
 

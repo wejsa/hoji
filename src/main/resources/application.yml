@@ -1,3 +1,6 @@
+# 공통 설정 (모든 환경에서 사용)
+# 환경별 설정은 application-{profile}.yml 파일 참조
+
 spring:
   application:
     name: hoji
@@ -8,32 +11,22 @@ spring:
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
       - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
 
-  # H2 Database
+  # H2 Database (공통 설정)
   datasource:
     url: jdbc:h2:mem:hoji
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
-  # H2 Console
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
-  # JPA
+  # JPA (공통 설정)
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create-drop
     properties:
       hibernate:
-        format_sql: true
-        show_sql: false
         use_sql_comments: true
     open-in-view: false
 
-  # Redis (Optional - 사용하지 않을 경우 주석 처리)
+  # Redis (Optional - 사용 시 환경별로 설정)
   data:
     redis:
       host: localhost
@@ -46,7 +39,7 @@ spring:
           max-idle: 8
           min-idle: 0
 
-  # RabbitMQ (Optional - 사용하지 않을 경우 주석 처리)
+  # RabbitMQ (Optional - 사용 시 환경별로 설정)
   rabbitmq:
     host: localhost
     port: 5672
@@ -63,37 +56,15 @@ spring:
           initial-interval: 3000
           max-attempts: 3
 
-# Actuator
+# Actuator (기본 설정)
 management:
   endpoints:
     web:
-      exposure:
-        include: health,info,metrics,prometheus
+      base-path: /actuator
   endpoint:
     health:
-      show-details: always
-
-# Logging
-logging:
-  level:
-    root: INFO
-    com.hoji: DEBUG
-    org.springframework.web: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
-# Custom Application Properties
-hoji:
-  logging:
-    # 민감정보 마스킹 대상 헤더 목록
-    sensitive-headers:
-      - authorization
-      - cookie
-      - set-cookie
-      - x-api-key
-      - x-auth-token
-      - x-csrf-token
-      - proxy-authorization
+      probes:
+        enabled: true  # Kubernetes liveness/readiness 프로브 활성화
 
 # SpringDoc OpenAPI
 springdoc:
@@ -105,11 +76,6 @@ springdoc:
     operations-sorter: alpha
   show-actuator: true
 
-# Server
+# Server (기본 포트)
 server:
   port: 8080
-  error:
-    include-message: always
-    include-binding-errors: always
-    include-stacktrace: on_param
-    include-exception: false
