@@ -5,10 +5,11 @@ Kotlin + Spring Boot 기반 백엔드 베이스 프로젝트
 ## 기술 스택
 
 ### Core
-- **Java**: 17
-- **Kotlin**: 1.9.20
-- **Spring Boot**: 3.2.0
-- **Gradle**: 8.5 (Kotlin DSL)
+- **Java**: 21 (LTS)
+- **Kotlin**: 2.1.0
+- **Spring Boot**: 3.4.0
+- **Gradle**: 8.11 (Kotlin DSL)
+- **Architecture**: Hexagonal Architecture (Ports & Adapters)
 
 ### Database & ORM
 - **H2**: 인메모리 데이터베이스 (개발/테스트용)
@@ -66,12 +67,42 @@ Kotlin + Spring Boot 기반 백엔드 베이스 프로젝트
 - ✅ 유틸리티 (DateTimeUtils, JsonUtils)
 - ✅ Swagger 커스터마이징
 
-## 프로젝트 구조
+## 프로젝트 구조 (Hexagonal Architecture)
 
 ```
 src/main/kotlin/com/hoji/
 ├── HojiApplication.kt              # 애플리케이션 진입점
-├── common/                         # 공통 모듈
+│
+├── domain/                         # 🔵 Domain Layer (Core Business Logic)
+│   ├── model/                      # 도메인 모델 (엔티티)
+│   │   └── User.kt                 # 사용자 도메인 모델
+│   ├── common/                     # 공통 도메인
+│   │   └── BaseEntity.kt           # 베이스 엔티티 (Auditing)
+│   └── port/                       # 포트 (인터페이스)
+│       ├── in/                     # Inbound Ports (Use Case 인터페이스)
+│       │   ├── CreateUserUseCase.kt
+│       │   ├── GetUserUseCase.kt
+│       │   ├── UpdateUserUseCase.kt
+│       │   └── DeleteUserUseCase.kt
+│       └── out/                    # Outbound Ports (Repository 인터페이스)
+│           └── UserPort.kt         # 사용자 영속성 포트
+│
+├── application/                    # 🟢 Application Layer (Use Case 구현)
+│   └── service/
+│       └── UserService.kt          # Use Case 구현체
+│
+├── adapter/                        # 🟡 Adapter Layer (외부 세계 연결)
+│   ├── in/                         # Inbound Adapters (입력)
+│   │   └── web/                    # REST API Adapter
+│   │       ├── UserController.kt   # REST 컨트롤러
+│   │       └── dto/                # Web DTO
+│   │           └── UserDto.kt      # 요청/응답 DTO
+│   └── out/                        # Outbound Adapters (출력)
+│       └── persistence/            # Persistence Adapter
+│           ├── UserJpaRepository.kt # JPA Repository
+│           └── UserPersistenceAdapter.kt # UserPort 구현체
+│
+├── common/                         # 공통 모듈 (Infrastructure)
 │   ├── dto/                       # 공통 DTO
 │   │   ├── ApiResponse.kt         # API 응답 구조
 │   │   └── ResultCode.kt          # 응답 코드 정의
@@ -79,52 +110,158 @@ src/main/kotlin/com/hoji/
 │   │   ├── BusinessException.kt   # 비즈니스 예외
 │   │   └── GlobalExceptionHandler.kt  # 전역 예외 처리
 │   ├── logging/                   # 로깅
-│   │   ├── LoggingInterceptor.kt  # 로깅 인터셉터
-│   │   └── RequestResponseCachingFilter.kt  # 요청/응답 캐싱 필터
+│   │   ├── LoggingInterceptor.kt
+│   │   └── RequestResponseCachingFilter.kt
 │   ├── context/                   # 컨텍스트 관리
-│   │   ├── RequestContext.kt      # 요청 컨텍스트
-│   │   └── RequestContextInterceptor.kt  # 컨텍스트 인터셉터
+│   │   ├── RequestContext.kt
+│   │   └── RequestContextInterceptor.kt
 │   ├── metrics/                   # 메트릭
-│   │   ├── CustomMetrics.kt       # 커스텀 메트릭
-│   │   └── MetricsInterceptor.kt  # 메트릭 인터셉터
+│   │   ├── CustomMetrics.kt
+│   │   └── MetricsInterceptor.kt
 │   ├── health/                    # 헬스 체크
-│   │   └── CustomHealthIndicator.kt  # 커스텀 헬스 체크
+│   │   └── CustomHealthIndicator.kt
 │   └── util/                      # 유틸리티
-│       ├── DateTimeUtils.kt       # 날짜/시간 유틸
-│       └── JsonUtils.kt           # JSON 유틸
-├── config/                        # 설정
-│   ├── JpaConfig.kt              # JPA 설정
-│   ├── AuditConfig.kt            # JPA Auditing 설정
-│   ├── QueryDslConfig.kt         # QueryDSL 설정
-│   ├── RedisConfig.kt            # Redis 설정
-│   ├── RabbitMqConfig.kt         # RabbitMQ 설정
-│   ├── WebClientConfig.kt        # WebClient 설정
-│   ├── RestTemplateConfig.kt     # RestTemplate 설정
-│   ├── WebMvcConfig.kt           # Web MVC 설정
-│   ├── MetricsConfig.kt          # 메트릭 설정 (멀티 인스턴스)
-│   ├── AsyncConfig.kt            # 비동기 설정
-│   ├── CorsConfig.kt             # CORS 설정
-│   ├── SwaggerConfig.kt          # Swagger 설정
-│   └── properties/               # Properties
-│       └── LoggingProperties.kt  # 로깅 설정
-├── controller/                    # 컨트롤러
-│   ├── UserController.kt         # 사용자 API
-│   └── dto/                      # DTO
-│       └── UserDto.kt            # 사용자 DTO
-├── service/                       # 서비스
-│   └── UserService.kt            # 사용자 서비스
-├── domain/                        # 도메인 엔티티
-│   ├── common/                   # 공통 엔티티
-│   │   └── BaseEntity.kt         # 베이스 엔티티 (Auditing)
-│   └── User.kt                   # 사용자 엔티티
-└── repository/                    # 레포지토리
-    └── UserRepository.kt         # 사용자 레포지토리
+│       ├── DateTimeUtils.kt
+│       └── JsonUtils.kt
+│
+└── config/                        # 설정 (Infrastructure)
+    ├── JpaConfig.kt
+    ├── AuditConfig.kt
+    ├── QueryDslConfig.kt
+    ├── RedisConfig.kt
+    ├── RabbitMqConfig.kt
+    ├── WebClientConfig.kt
+    ├── RestTemplateConfig.kt
+    ├── WebMvcConfig.kt
+    ├── MetricsConfig.kt
+    ├── AsyncConfig.kt
+    ├── CorsConfig.kt
+    ├── SwaggerConfig.kt
+    └── properties/
+        └── LoggingProperties.kt
+```
+
+## Hexagonal Architecture (포트와 어댑터)
+
+### 아키텍처 개요
+
+이 프로젝트는 **Hexagonal Architecture (육각형 아키텍처)**를 적용하여 비즈니스 로직을 외부 기술로부터 독립시켰습니다.
+
+```
+                    ┌─────────────────────────────┐
+                    │   Inbound Adapters (입력)    │
+                    │  - REST Controllers          │
+                    │  - GraphQL (future)          │
+                    │  - Message Listeners         │
+                    └──────────┬──────────────────┘
+                               │
+                    ┌──────────▼──────────────────┐
+                    │    Inbound Ports (입력포트)   │
+                    │  - Use Case Interfaces      │
+                    └──────────┬──────────────────┘
+                               │
+         ┌─────────────────────▼─────────────────────┐
+         │          Domain Layer (핵심 비즈니스)        │
+         │  - Domain Models (엔티티)                   │
+         │  - Business Rules                          │
+         │  - Port Interfaces                         │
+         └─────────────────────┬─────────────────────┘
+                               │
+                    ┌──────────▼──────────────────┐
+                    │  Outbound Ports (출력포트)    │
+                    │  - Repository Interfaces    │
+                    │  - External API Interfaces  │
+                    └──────────┬──────────────────┘
+                               │
+                    ┌──────────▼──────────────────┐
+                    │  Outbound Adapters (출력)    │
+                    │  - JPA Repositories         │
+                    │  - REST Clients             │
+                    │  - Message Publishers       │
+                    └─────────────────────────────┘
+```
+
+### 레이어별 책임
+
+#### 1. Domain Layer (🔵 Core)
+- **위치**: `domain/`
+- **책임**: 핵심 비즈니스 로직, 엔티티, 도메인 규칙
+- **의존성**: 외부 프레임워크에 의존하지 않음
+- **구성요소**:
+  - `model/`: 도메인 엔티티 (User, Product 등)
+  - `port/in/`: Use Case 인터페이스 (비즈니스 기능 정의)
+  - `port/out/`: 영속성/외부 시스템 인터페이스
+
+#### 2. Application Layer (🟢 Use Cases)
+- **위치**: `application/`
+- **책임**: Use Case 구현, 비즈니스 로직 조율
+- **의존성**: Domain Layer에만 의존
+- **구성요소**:
+  - `service/`: Use Case 구현체 (Inbound Port 구현)
+
+#### 3. Adapter Layer (🟡 Infrastructure)
+- **위치**: `adapter/`
+- **책임**: 외부 세계와의 연결 (HTTP, DB, 메시징 등)
+- **의존성**: Domain과 Application에 의존
+- **구성요소**:
+  - `in/web/`: REST API 컨트롤러 (Inbound Adapter)
+  - `out/persistence/`: JPA Repository 구현 (Outbound Adapter)
+
+### 헥사고날 아키텍처의 장점
+
+✅ **테스트 용이성**: 비즈니스 로직을 프레임워크 없이 테스트 가능
+✅ **유연성**: DB, 프레임워크를 쉽게 교체 가능 (JPA → MongoDB)
+✅ **독립성**: 비즈니스 로직이 외부 기술에 의존하지 않음
+✅ **명확한 경계**: 각 레이어의 책임이 명확하게 분리됨
+✅ **확장성**: 새로운 Adapter 추가 용이 (GraphQL, gRPC 등)
+
+### Use Case 예시
+
+```kotlin
+// 1. Domain: Use Case 인터페이스 정의 (Port)
+interface CreateUserUseCase {
+    fun createUser(command: CreateUserCommand): User
+}
+
+// 2. Application: Use Case 구현 (비즈니스 로직)
+@Service
+class UserService(
+    private val userPort: UserPort  // Outbound Port
+) : CreateUserUseCase {
+    override fun createUser(command: CreateUserCommand): User {
+        // 비즈니스 규칙 적용
+        validateUniqueUsername(command.username)
+        val user = User.create(command)
+        return userPort.save(user)
+    }
+}
+
+// 3. Adapter: REST API (Inbound Adapter)
+@RestController
+class UserController(
+    private val createUserUseCase: CreateUserUseCase  // Use Case 주입
+) {
+    @PostMapping("/users")
+    fun createUser(@RequestBody request: CreateUserRequest) {
+        val command = request.toCommand()
+        val user = createUserUseCase.createUser(command)
+        return UserResponse.from(user)
+    }
+}
+
+// 4. Adapter: Persistence (Outbound Adapter)
+@Component
+class UserPersistenceAdapter(
+    private val jpaRepository: UserJpaRepository
+) : UserPort {  // Outbound Port 구현
+    override fun save(user: User) = jpaRepository.save(user)
+}
 ```
 
 ## 빌드 및 실행
 
 ### 요구사항
-- JDK 17 이상
+- JDK 21 이상
 
 ### 빌드
 ```bash

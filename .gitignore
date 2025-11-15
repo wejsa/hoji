@@ -11,6 +11,8 @@ build/
 *.iws
 *.ipr
 out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 .vscode/
 
 # OS

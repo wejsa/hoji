@@ -1,7 +1,7 @@
-package com.hoji.controller.dto
+package com.hoji.adapter.`in`.web.dto
 
-import com.hoji.domain.User
-import com.hoji.domain.UserStatus
+import com.hoji.domain.model.User
+import com.hoji.domain.model.UserStatus
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -17,6 +17,7 @@ data class CreateUserRequest(
 
     @field:NotBlank(message = "Email is required")
     @field:Email(message = "Invalid email format")
+    @field:Size(max = 100, message = "Email must be less than 100 characters")
     val email: String,
 
     @field:NotBlank(message = "Name is required")
@@ -29,12 +30,11 @@ data class CreateUserRequest(
  */
 data class UpdateUserRequest(
     @field:Email(message = "Invalid email format")
-    val email: String?,
+    @field:Size(max = 100, message = "Email must be less than 100 characters")
+    val email: String? = null,
 
     @field:Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
-    val name: String?,
-
-    val status: UserStatus?
+    val name: String? = null
 )
 
 /**
@@ -47,7 +47,9 @@ data class UserResponse(
     val name: String,
     val status: UserStatus,
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val updatedAt: LocalDateTime,
+    val createdBy: String?,
+    val updatedBy: String?
 ) {
     companion object {
         fun from(user: User): UserResponse {
@@ -58,7 +60,9 @@ data class UserResponse(
                 name = user.name,
                 status = user.status,
                 createdAt = user.createdAt,
-                updatedAt = user.updatedAt
+                updatedAt = user.updatedAt,
+                createdBy = user.createdBy,
+                updatedBy = user.updatedBy
             )
         }
     }

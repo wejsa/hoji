@@ -1,10 +1,11 @@
-package com.hoji.domain
+package com.hoji.domain.model
 
 import com.hoji.domain.common.BaseEntity
 import jakarta.persistence.*
 
 /**
- * 사용자 엔티티 (예제)
+ * 사용자 도메인 모델
+ * 헥사고날 아키텍처의 Core Domain
  */
 @Entity
 @Table(name = "users")
@@ -25,10 +26,28 @@ class User(
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     var status: UserStatus = UserStatus.ACTIVE
-) : BaseEntity()
+) : BaseEntity() {
 
+    fun activate() {
+        this.status = UserStatus.ACTIVE
+    }
+
+    fun deactivate() {
+        this.status = UserStatus.INACTIVE
+    }
+
+    fun suspend() {
+        this.status = UserStatus.SUSPENDED
+    }
+
+    fun isActive(): Boolean = status == UserStatus.ACTIVE
+}
+
+/**
+ * 사용자 상태
+ */
 enum class UserStatus {
-    ACTIVE,
-    INACTIVE,
-    DELETED
+    ACTIVE,    // 활성
+    INACTIVE,  // 비활성
+    SUSPENDED  // 정지
 }
