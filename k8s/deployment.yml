@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hoji-api
+  labels:
+    app: hoji
+spec:
+  replicas: 3  # 3개 인스턴스
+  selector:
+    matchLabels:
+      app: hoji
+  template:
+    metadata:
+      labels:
+        app: hoji
+      annotations:
+        # Prometheus가 이 Pod에서 메트릭을 수집하도록 설정
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      containers:
+      - name: hoji-api
+        image: hoji/api:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        # Pod 이름을 환경 변수로 주입 (인스턴스 ID로 사용)
+        - name: INSTANCE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+
+        # Health Check
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 5
+
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hoji-api
+  labels:
+    app: hoji
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: hoji

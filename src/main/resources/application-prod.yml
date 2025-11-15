@@ -28,6 +28,12 @@ management:
     export:
       prometheus:
         enabled: true
+        # Prometheus에서 수집 시 타임아웃
+        step: 1m
+    # 메트릭 태그 설정
+    tags:
+      environment: production
+      region: ${REGION:us-east-1}  # 환경 변수로 리전 설정
 
 logging:
   level:

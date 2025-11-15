@@ -56,6 +56,16 @@ Kotlin + Spring Boot 기반 백엔드 베이스 프로젝트
 - ✅ 예제 도메인 (User CRUD API)
 - ✅ 테스트 코드
 
+### 3단계 - 상용 서비스 운영 기능
+- ✅ JPA Auditing (BaseEntity)
+- ✅ 커스텀 메트릭 수집 (Micrometer + Prometheus)
+- ✅ 멀티 인스턴스 메트릭 관리
+- ✅ 비동기 처리 (Async)
+- ✅ CORS 설정
+- ✅ Graceful Shutdown
+- ✅ 유틸리티 (DateTimeUtils, JsonUtils)
+- ✅ Swagger 커스터마이징
+
 ## 프로젝트 구조
 
 ```
@@ -71,25 +81,41 @@ src/main/kotlin/com/hoji/
 │   ├── logging/                   # 로깅
 │   │   ├── LoggingInterceptor.kt  # 로깅 인터셉터
 │   │   └── RequestResponseCachingFilter.kt  # 요청/응답 캐싱 필터
-│   └── context/                   # 컨텍스트 관리
-│       ├── RequestContext.kt      # 요청 컨텍스트
-│       └── RequestContextInterceptor.kt  # 컨텍스트 인터셉터
+│   ├── context/                   # 컨텍스트 관리
+│   │   ├── RequestContext.kt      # 요청 컨텍스트
+│   │   └── RequestContextInterceptor.kt  # 컨텍스트 인터셉터
+│   ├── metrics/                   # 메트릭
+│   │   ├── CustomMetrics.kt       # 커스텀 메트릭
+│   │   └── MetricsInterceptor.kt  # 메트릭 인터셉터
+│   ├── health/                    # 헬스 체크
+│   │   └── CustomHealthIndicator.kt  # 커스텀 헬스 체크
+│   └── util/                      # 유틸리티
+│       ├── DateTimeUtils.kt       # 날짜/시간 유틸
+│       └── JsonUtils.kt           # JSON 유틸
 ├── config/                        # 설정
 │   ├── JpaConfig.kt              # JPA 설정
+│   ├── AuditConfig.kt            # JPA Auditing 설정
 │   ├── QueryDslConfig.kt         # QueryDSL 설정
 │   ├── RedisConfig.kt            # Redis 설정
 │   ├── RabbitMqConfig.kt         # RabbitMQ 설정
 │   ├── WebClientConfig.kt        # WebClient 설정
 │   ├── RestTemplateConfig.kt     # RestTemplate 설정
-│   └── WebMvcConfig.kt           # Web MVC 설정
+│   ├── WebMvcConfig.kt           # Web MVC 설정
+│   ├── MetricsConfig.kt          # 메트릭 설정 (멀티 인스턴스)
+│   ├── AsyncConfig.kt            # 비동기 설정
+│   ├── CorsConfig.kt             # CORS 설정
+│   ├── SwaggerConfig.kt          # Swagger 설정
+│   └── properties/               # Properties
+│       └── LoggingProperties.kt  # 로깅 설정
 ├── controller/                    # 컨트롤러
-│   ├── HealthController.kt       # Health Check
 │   ├── UserController.kt         # 사용자 API
 │   └── dto/                      # DTO
 │       └── UserDto.kt            # 사용자 DTO
 ├── service/                       # 서비스
 │   └── UserService.kt            # 사용자 서비스
 ├── domain/                        # 도메인 엔티티
+│   ├── common/                   # 공통 엔티티
+│   │   └── BaseEntity.kt         # 베이스 엔티티 (Auditing)
 │   └── User.kt                   # 사용자 엔티티
 └── repository/                    # 레포지토리
     └── UserRepository.kt         # 사용자 레포지토리
@@ -326,6 +352,106 @@ hoji:
 - Prod 환경에서 보안 강화 (에러 정보 비노출)
 - 응답 압축 및 HTTP/2 지원
 - 최소한의 Actuator 엔드포인트만 노출
+
+### 9. 커스텀 메트릭 및 멀티 인스턴스 지원
+프로덕션 환경에서 여러 인스턴스가 동시에 실행될 때 각 인스턴스의 메트릭을 개별적으로 추적할 수 있습니다.
+
+#### 메트릭 아키텍처
+```
+각 인스턴스 (In-Memory)
+├── API 호출 카운터
+├── 비즈니스 이벤트 카운터
+├── 에러 카운터
+└── 처리 시간 타이머
+        ↓
+   Prometheus (스크래핑)
+        ↓
+   Prometheus DB (시계열 저장)
+        ↓
+   Grafana (시각화)
+```
+
+#### 멀티 인스턴스 메트릭 수집
+각 인스턴스는 자동으로 다음 태그를 메트릭에 추가합니다:
+- `application`: 애플리케이션 이름
+- `instance`: 인스턴스 ID (환경 변수 또는 자동 생성)
+- `host`: 호스트명
+- `port`: 포트 번호
+- `environment`: 환경 (dev, prod 등)
+- `region`: 리전 (선택적)
+
+#### Kubernetes 배포 예시
+`k8s/deployment.yml` 파일을 참고하세요:
+- 3개의 레플리카로 실행
+- Prometheus 자동 스크래핑 설정
+- 각 Pod의 이름이 INSTANCE_ID로 주입
+- Liveness/Readiness 프로브 설정
+
+#### Prometheus 쿼리 예시
+```promql
+# 전체 인스턴스 합산
+sum(api_calls_total{application="hoji"})
+
+# 인스턴스별 조회
+api_calls_total{application="hoji",instance=~".*"}
+
+# 특정 인스턴스만
+api_calls_total{application="hoji",instance="hoji-api-0"}
+
+# 평균 응답 시간
+rate(api_processing_time_sum[5m]) / rate(api_processing_time_count[5m])
+```
+
+#### 제공되는 메트릭
+- `api.calls`: API 호출 횟수 (endpoint, method, status 태그)
+- `business.events`: 비즈니스 이벤트 카운트
+- `errors.count`: 에러 발생 횟수 (errorType, errorCode 태그)
+- `processing.time`: 처리 시간 (operation 태그)
+
+#### 사용 예시
+```kotlin
+@Service
+class YourService(private val customMetrics: CustomMetrics) {
+    fun processOrder(order: Order) {
+        customMetrics.time("order.processing") {
+            // 비즈니스 로직
+            customMetrics.incrementBusinessEvent("order.created")
+        }
+    }
+}
+```
+
+### 10. JPA Auditing
+모든 엔티티에 자동으로 생성/수정 정보를 추적합니다:
+```kotlin
+@Entity
+class YourEntity : BaseEntity() {
+    // createdAt, updatedAt, createdBy, updatedBy는 자동 관리됨
+}
+```
+
+- `createdAt`: 생성 시간
+- `updatedAt`: 수정 시간
+- `createdBy`: 생성자 (RequestContext의 userId 사용)
+- `updatedBy`: 수정자 (RequestContext의 userId 사용)
+
+### 11. 비동기 처리
+`@Async` 어노테이션으로 비동기 작업 처리:
+```kotlin
+@Service
+class NotificationService {
+    @Async
+    fun sendEmail(to: String, subject: String) {
+        // 비동기로 실행됨
+    }
+}
+```
+
+ThreadPool 설정:
+- Core Pool Size: 5
+- Max Pool Size: 10
+- Queue Capacity: 25
+- Graceful Shutdown 지원
 
 ## 라이센스
 
