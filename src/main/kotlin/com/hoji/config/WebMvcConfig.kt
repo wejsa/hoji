@@ -2,6 +2,7 @@ package com.hoji.config
 
 import com.hoji.common.context.RequestContextInterceptor
 import com.hoji.common.logging.LoggingInterceptor
+import com.hoji.common.metrics.MetricsInterceptor
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -12,7 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebMvcConfig(
     private val requestContextInterceptor: RequestContextInterceptor,
-    private val loggingInterceptor: LoggingInterceptor
+    private val loggingInterceptor: LoggingInterceptor,
+    private val metricsInterceptor: MetricsInterceptor
 ) : WebMvcConfigurer {
 
     override fun addInterceptors(registry: InterceptorRegistry) {
@@ -23,6 +25,11 @@ class WebMvcConfig(
 
         // 로깅 인터셉터
         registry.addInterceptor(loggingInterceptor)
+            .addPathPatterns("/**")
+            .excludePathPatterns("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**")
+
+        // 메트릭 수집 인터셉터
+        registry.addInterceptor(metricsInterceptor)
             .addPathPatterns("/**")
             .excludePathPatterns("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**")
     }

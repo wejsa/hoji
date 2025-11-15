@@ -80,3 +80,9 @@ springdoc:
 # Server
 server:
   port: 8080
+  shutdown: graceful  # 우아한 종료
+
+# Graceful Shutdown 설정
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s  # 종료 대기 시간
