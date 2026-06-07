@@ -6,6 +6,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.validation.BindException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -117,6 +118,18 @@ class GlobalExceptionHandler {
         logger.warn { "No handler found: ${e.requestURL}" }
         val response = ApiResponse.error<Unit>(ResultCode.NOT_FOUND, "Endpoint not found")
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
+    }
+
+    /**
+     * 메서드 보안(@PreAuthorize) 인가 실패 처리.
+     * 메서드 레벨 AccessDeniedException은 MVC 계층에서 발생하므로 ExceptionTranslationFilter의
+     * accessDeniedHandler에 도달하지 않는다. catch-all(Exception)이 500으로 잡지 않도록 명시 403 매핑한다.
+     */
+    @ExceptionHandler(AccessDeniedException::class)
+    fun handleAccessDeniedException(e: AccessDeniedException): ResponseEntity<ApiResponse<Unit>> {
+        logger.warn { "Access denied: ${e.message}" }
+        val response = ApiResponse.error<Unit>(ResultCode.FORBIDDEN, "Access is denied")
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response)
     }
 
     /**

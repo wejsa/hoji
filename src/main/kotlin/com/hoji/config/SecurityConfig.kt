@@ -19,8 +19,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * Spring Security 설정 — 무상태 JWT 인증.
  *
- * 인증/인가 라우팅의 기본 골격을 정의한다. 엔드포인트별 세부 권한(@PreAuthorize)은
- * Step 5에서 보강한다.
+ * PUBLIC_PATHS(가입/로그인/재발급·Swagger·health)는 permitAll, 그 외 전체는 인증 필수.
+ * 엔드포인트별 세부 권한(RBAC)은 @EnableMethodSecurity + 컨트롤러 @PreAuthorize로 적용한다.
+ * 미인증은 401(EntryPoint), 인가 실패는 403(AccessDeniedHandler / GlobalExceptionHandler)로 응답한다.
  */
 @Configuration
 @EnableMethodSecurity

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
+import java.util.UUID
 import javax.crypto.SecretKey
 
 private val logger = KotlinLogging.logger {}
@@ -39,6 +40,7 @@ class JwtTokenProvider(
     private fun buildToken(userId: Long, username: String, role: Role, validityMs: Long, type: String): String {
         val now = Date()
         return Jwts.builder()
+            .id(UUID.randomUUID().toString()) // jti — 동일 초에 발급해도 토큰이 유일하도록(회전 무효화 보장)
             .subject(username)
             .claim(CLAIM_USER_ID, userId)
             .claim(CLAIM_ROLE, role.name)

@@ -155,17 +155,19 @@ class UserControllerTest {
     fun `should update user successfully`() {
         // given
         val userId = 1L
+        // status 변경은 ADMIN 권한이 필요(보안 컨텍스트 의존)하므로 보안 제외 슬라이스에서는 email/name만 검증.
+        // status 기반 접근 제어는 AuthIntegrationTest(e2e)에서 검증한다.
         val request = UpdateUserRequest(
             email = "newemail@example.com",
             name = "New Name",
-            status = UserStatus.INACTIVE
+            status = null
         )
         val response = UserResponse(
             id = userId,
             username = "testuser",
             email = "newemail@example.com",
             name = "New Name",
-            status = UserStatus.INACTIVE,
+            status = UserStatus.ACTIVE,
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now()
         )
