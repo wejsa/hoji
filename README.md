@@ -1,6 +1,12 @@
-# Hoji - Spring Boot Backend Base Project
+# Hoji — Spring Boot + Kotlin 백엔드 보일러플레이트 (JWT 인증/인가 내장)
 
-Kotlin + Spring Boot 기반 백엔드 베이스 프로젝트
+Kotlin + Spring Boot 기반의 운영지향 백엔드 베이스 프로젝트입니다.
+**Spring Security + JWT 기반 인증/인가(회원가입·로그인·토큰 회전·RBAC)** 를 대표 기능으로 제공하며,
+로깅·메트릭(Prometheus)·Actuator·JPA Auditing·CORS·전역 예외처리·환경별 설정 등 상용 서비스에 필요한
+공통 기반을 함께 갖추고 있습니다. 새 서비스의 인증 토대 또는 백엔드 스타터로 그대로 재사용할 수 있습니다.
+
+> ⚙️ 기본 저장소는 H2 인메모리 + Caffeine 로컬 캐시(개발/학습용)입니다.
+> 프로덕션에서는 영속 DB(PostgreSQL 등) 및 분산 캐시로 교체하세요. 자세한 내용은 [재사용 가이드](#재사용-가이드)를 참고하세요.
 
 ## 기술 스택
 
@@ -10,15 +16,19 @@ Kotlin + Spring Boot 기반 백엔드 베이스 프로젝트
 - **Spring Boot**: 3.2.0
 - **Gradle**: 8.5 (Kotlin DSL)
 
+### Security (인증/인가)
+- **Spring Security 6**: 무상태 보안 필터체인
+- **JJWT 0.12.3**: JWT 발급/검증 (HS256)
+- **BCrypt**: 비밀번호 해싱
+
 ### Database & ORM
 - **H2**: 인메모리 데이터베이스 (개발/테스트용)
 - **JPA**: 데이터 액세스
 - **QueryDSL**: 타입 안전 쿼리
 - **Spring Data JPA**: 레포지토리 추상화
 
-### Message Queue & Cache
-- **RabbitMQ**: 메시지 큐
-- **Redis**: 캐시 및 세션 저장소
+### Cache
+- **Caffeine**: 로컬 캐시 (분산 캐시 Redis는 미사용 — 목표 스택)
 
 ### HTTP Client
 - **WebClient**: 비동기 HTTP 클라이언트
@@ -37,6 +47,23 @@ Kotlin + Spring Boot 기반 백엔드 베이스 프로젝트
 - **SpringMockK**: Spring + MockK 통합
 
 ## 주요 기능
+
+### 🔐 인증/인가 (Authentication & Authorization) — 대표 기능
+
+Spring Security + JWT 기반의 무상태 인증/인가 시스템. 실무 수준의 보안 패턴을 포함합니다.
+
+- ✅ **회원가입 / 로그인** — BCrypt 비밀번호 해싱 (평문 미저장)
+- ✅ **JWT 토큰** — Access(30분) / Refresh(14일), HS256 서명, `typ` 클레임으로 토큰 타입 혼용 차단
+- ✅ **Refresh Token 회전(Rotation)** — DB에 SHA-256 해시로 저장, 재발급 시 기존 토큰 폐기
+  - 단일 `DELETE`(행 잠금)로 **동시 회전 차단** → 토큰 재사용 공격 방어
+  - `jti`(UUID) 클레임으로 동일 시각 발급 토큰까지 유일성 보장
+- ✅ **로그아웃** — Refresh Token 폐기로 재발급 차단
+- ✅ **RBAC (역할 기반 접근 제어)** — `USER` / `ADMIN` 역할 + `@PreAuthorize` 메서드 보안
+- ✅ **소유권 검증** — `@userSecurity.isSelf()` SpEL로 "본인 또는 ADMIN" 접근 제어 (IDOR 방어)
+- ✅ **계정 상태 차단** — `INACTIVE` / `DELETED` 계정의 로그인·재발급 거부
+- ✅ **통일된 인증 실패 응답** — 401(미인증) / 403(권한부족)을 `ApiResponse` 포맷으로 반환
+
+> 인증 API와 접근 제어 매트릭스는 [API 엔드포인트](#api-엔드포인트) 섹션을 참고하세요.
 
 ### 1단계 - 핵심 기능
 - ✅ Spring Boot + Gradle + Kotlin 프로젝트 구조
@@ -93,32 +120,48 @@ src/main/kotlin/com/hoji/
 │       ├── DateTimeUtils.kt       # 날짜/시간 유틸
 │       └── JsonUtils.kt           # JSON 유틸
 ├── config/                        # 설정
+│   ├── SecurityConfig.kt         # Spring Security 필터체인 (무상태 JWT)
 │   ├── JpaConfig.kt              # JPA 설정
 │   ├── AuditConfig.kt            # JPA Auditing 설정
+│   ├── CacheConfig.kt            # Caffeine 캐시 설정
 │   ├── QueryDslConfig.kt         # QueryDSL 설정
-│   ├── RedisConfig.kt            # Redis 설정
-│   ├── RabbitMqConfig.kt         # RabbitMQ 설정
 │   ├── WebClientConfig.kt        # WebClient 설정
 │   ├── RestTemplateConfig.kt     # RestTemplate 설정
-│   ├── WebMvcConfig.kt           # Web MVC 설정
+│   ├── WebMvcConfig.kt           # Web MVC 설정 (인터셉터 등록)
 │   ├── MetricsConfig.kt          # 메트릭 설정 (멀티 인스턴스)
 │   ├── AsyncConfig.kt            # 비동기 설정
 │   ├── CorsConfig.kt             # CORS 설정
 │   ├── SwaggerConfig.kt          # Swagger 설정
+│   ├── PropertiesProfileValidator.kt  # 프로파일별 설정 검증
 │   └── properties/               # Properties
+│       ├── JwtProperties.kt      # JWT 설정 (시크릿/만료, prod fail-fast)
+│       ├── CorsProperties.kt     # CORS 허용 오리진
 │       └── LoggingProperties.kt  # 로깅 설정
+├── security/                      # 인증/인가
+│   ├── JwtTokenProvider.kt       # JWT 발급/검증 (typ/jti 클레임)
+│   ├── JwtAuthenticationFilter.kt    # Bearer 토큰 검증 필터 (Access만 인정)
+│   ├── JwtAuthenticationEntryPoint.kt # 미인증 401 핸들러
+│   ├── JwtAccessDeniedHandler.kt # 인가 실패 403 핸들러
+│   └── UserSecurity.kt           # @PreAuthorize 소유권 판정 (isSelf)
 ├── controller/                    # 컨트롤러
-│   ├── UserController.kt         # 사용자 API
+│   ├── AuthController.kt         # 인증 API (signup/login/refresh/logout/me)
+│   ├── UserController.kt         # 사용자 API (RBAC 접근 제어)
 │   └── dto/                      # DTO
-│       └── UserDto.kt            # 사용자 DTO
+│       ├── AuthDto.kt           # 인증 요청/응답 DTO
+│       └── UserDto.kt           # 사용자 DTO
 ├── service/                       # 서비스
-│   └── UserService.kt            # 사용자 서비스
+│   ├── AuthService.kt           # 인증 서비스 (회원가입/로그인/회전/로그아웃)
+│   ├── CustomUserDetailsService.kt   # Spring Security UserDetails 로딩
+│   └── UserService.kt           # 사용자 서비스
 ├── domain/                        # 도메인 엔티티
 │   ├── common/                   # 공통 엔티티
 │   │   └── BaseEntity.kt         # 베이스 엔티티 (Auditing)
-│   └── User.kt                   # 사용자 엔티티
+│   ├── User.kt                   # 사용자 엔티티 (+ UserStatus enum)
+│   ├── Role.kt                   # 역할 enum (USER/ADMIN)
+│   └── RefreshToken.kt           # Refresh Token 엔티티 (해시 저장)
 └── repository/                    # 레포지토리
-    └── UserRepository.kt         # 사용자 레포지토리
+    ├── UserRepository.kt         # 사용자 레포지토리
+    └── RefreshTokenRepository.kt # Refresh Token 레포지토리
 ```
 
 ## 빌드 및 실행
@@ -202,14 +245,58 @@ GET /actuator/health/readiness    # Kubernetes Readiness Probe
 }
 ```
 
-### User API
+### Auth API
+
+모든 요청/응답은 `Content-Type: application/json`. 인증이 필요한 API는 `Authorization: Bearer {accessToken}` 헤더로 토큰을 전달합니다.
+
+| Method | Path | 설명 | 인증 |
+|--------|------|------|------|
+| POST | `/api/v1/auth/signup` | 회원가입 (201) | 불필요 |
+| POST | `/api/v1/auth/login` | 로그인 — Access + Refresh 토큰 발급 | 불필요 |
+| POST | `/api/v1/auth/refresh` | 토큰 재발급 (Refresh Token 본문 전달, 회전) | 불필요 |
+| POST | `/api/v1/auth/logout` | 로그아웃 — Refresh Token 폐기 | 필요 |
+| GET | `/api/v1/auth/me` | 현재 사용자 정보 조회 | 필요 |
+
+로그인 응답 예시:
+```json
+{
+  "success": true,
+  "code": "0000",
+  "message": "Login successful",
+  "data": {
+    "accessToken": "<jwt>",
+    "refreshToken": "<jwt>",
+    "tokenType": "Bearer"
+  }
+}
 ```
-POST   /api/v1/users              # 사용자 생성
-GET    /api/v1/users              # 사용자 목록 조회
-GET    /api/v1/users/{id}         # 사용자 조회
-PUT    /api/v1/users/{id}         # 사용자 수정
-DELETE /api/v1/users/{id}         # 사용자 삭제
-```
+
+### User API — 접근 제어 매트릭스
+
+`@PreAuthorize` 기반 RBAC가 적용됩니다.
+
+| Method | Path | 설명 | 허용 역할 |
+|--------|------|------|----------|
+| POST | `/api/v1/users` | 사용자 생성 | ADMIN |
+| GET | `/api/v1/users` | 사용자 목록 조회 | ADMIN |
+| GET | `/api/v1/users/{id}` | 사용자 단건 조회 | ADMIN 또는 본인 |
+| PUT | `/api/v1/users/{id}` | 사용자 수정 (`status` 변경은 ADMIN만) | ADMIN 또는 본인 |
+| DELETE | `/api/v1/users/{id}` | 사용자 삭제 | ADMIN |
+
+- 미인증(토큰 없음/만료/위조) → `401 UNAUTHORIZED`
+- 권한 부족(역할 불일치/타인 리소스) → `403 FORBIDDEN`
+
+### 응답 코드 (ResultCode)
+
+| code | HTTP | 의미 |
+|------|------|------|
+| `0000` | 200/201/204 | 성공 |
+| `4001` | 401 | 인증 필요 (토큰 없음/만료/위조, 자격증명 오류) |
+| `4003` | 403 | 권한 부족 |
+| `4004` | 404 | 리소스 없음 |
+| `4009` | 409 | 중복 (username/email 이미 존재) |
+| `4010` | 400 | 입력값 검증 실패 |
+| `5000` | 500 | 서버 내부 오류 |
 
 ### Actuator (기타)
 ```
@@ -276,10 +363,10 @@ H2 콘솔 접근 (환경별로 다름):
 - 응답 압축: 활성화
 - HTTP/2: 활성화
 
-### Redis 및 RabbitMQ 비활성화
+### 캐시 / 메시지
 
-기본적으로 Redis와 RabbitMQ 자동 설정이 제외되어 있습니다.
-사용하려면 `application.yml`에서 해당 설정의 `autoconfigure.exclude`를 제거하세요.
+- **캐시**: Caffeine 로컬 캐시(`spring.cache.type=caffeine`). 단일 인스턴스 전제이므로, 멀티 인스턴스로 확장 시 Redis 등 분산 캐시로 교체하세요.
+- **메시지**: 별도 메시지 브로커(RabbitMQ/Kafka)는 사용하지 않습니다. 인스턴스 내 이벤트는 Spring ApplicationEvent로 처리합니다.
 
 ## 로깅
 
@@ -452,6 +539,35 @@ ThreadPool 설정:
 - Max Pool Size: 10
 - Queue Capacity: 25
 - Graceful Shutdown 지원
+
+## 재사용 가이드
+
+이 프로젝트는 **새 백엔드 서비스의 인증 토대 / 스타터**로 그대로 가져다 쓸 수 있습니다.
+
+### 이런 경우에 적합
+- JWT 인증/인가가 필요한 새 서비스의 출발점
+- 회원/권한 관리가 필요한 어드민·내부 도구
+- Spring Security + RBAC 패턴 학습·프로토타입
+
+### 새 비즈니스 도메인 추가하기
+인증/공통 기반은 그대로 두고 도메인만 얹으면 됩니다.
+1. `domain/`에 엔티티 추가 (`BaseEntity` 상속 시 Auditing 자동 적용)
+2. `repository/` → `service/` → `controller/` 추가
+3. 컨트롤러에 `@PreAuthorize`로 권한 지정 (기존 RBAC 재사용)
+4. 응답은 `ApiResponse`, 예외는 `BusinessException` 계열로 통일
+
+### 프로덕션 전 반드시 교체할 것
+기본 설정은 개발/학습용입니다. 실서비스 전에 다음을 교체하세요.
+
+| 항목 | 현재(기본) | 프로덕션 권장 |
+|------|-----------|--------------|
+| 데이터베이스 | H2 인메모리 (재시작 시 소실) | PostgreSQL/MySQL 등 영속 DB + Flyway 마이그레이션 |
+| 캐시 | Caffeine (로컬) | Redis 등 분산 캐시 (멀티 인스턴스 시) |
+| JWT 시크릿 | 기본값 | 환경변수 `JWT_SECRET` (256비트 이상) 주입 — prod는 기본값 사용 시 부팅 실패(fail-fast) |
+| CORS 오리진 | 예시 도메인 | 환경변수 `CORS_ALLOWED_ORIGINS`로 실제 도메인 지정 |
+
+> ⚠️ `prod` 프로파일은 `ddl-auto: validate` + H2 인메모리 조합이라 그대로 부팅하면 실패할 수 있습니다.
+> 프로덕션은 영속 DB + 스키마 마이그레이션(Flyway) 도입을 전제로 합니다.
 
 ## 라이센스
 
