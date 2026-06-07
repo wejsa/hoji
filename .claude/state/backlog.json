@@ -73,19 +73,19 @@
           "step": 3,
           "title": "회원가입/로그인 API",
           "prLineLimit": 800,
-          "status": "todo"
+          "status": "pending"
         },
         {
           "step": 4,
           "title": "Refresh Token 저장 + 재발급/로그아웃/me",
           "prLineLimit": 700,
-          "status": "todo"
+          "status": "pending"
         },
         {
           "step": 5,
           "title": "기존 API 접근 제어 + e2e 통합 테스트",
           "prLineLimit": 500,
-          "status": "todo"
+          "status": "pending"
         }
       ],
       "currentStep": 3,
