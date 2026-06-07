@@ -28,8 +28,12 @@ class PropertiesProfileValidator(
     }
 
     companion object {
-        /** 활성 프로파일 중 'prod'를 포함(대소문자 무관)하는 것이 있으면 prod로 판정한다(예: `prod`, `prod-eu`). */
+        /**
+         * 활성 프로파일 중 정확히 `prod`이거나 `prod-`로 시작하는 것이 있으면 prod로 판정한다(대소문자 무관).
+         * 예: `prod`, `prod-eu` → prod. `non-prod`/`production` 같은 부분일치는 prod가 아니다
+         * (느슨한 `contains("prod")`의 오탐 차단 — TASK-007 M001).
+         */
         fun isProdProfile(activeProfiles: Array<String>): Boolean =
-            activeProfiles.any { it.contains("prod", ignoreCase = true) }
+            activeProfiles.any { it.equals("prod", ignoreCase = true) || it.startsWith("prod-", ignoreCase = true) }
     }
 }
