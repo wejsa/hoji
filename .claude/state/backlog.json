@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 36,
+    "version": 37,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -30,8 +30,8 @@
       "phase": 1,
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
-      "assignee": "wejsa-u@hoji-20260607-132249",
-      "assignedAt": "2026-06-07T15:10:00Z",
+      "assignee": "wejsa-u@hoji-20260607T102924Z",
+      "assignedAt": "2026-06-07T10:29:24Z",
       "lockTTL": 10800,
       "lockedFiles": [
         "build.gradle.kts",
@@ -59,7 +59,8 @@
           "prLineLimit": 200,
           "status": "merged",
           "prNumber": 3,
-          "mergedAt": "2026-06-07T05:29:23Z"
+          "mergedAt": "2026-06-07T05:29:23Z",
+          "stepNumber": 1
         },
         {
           "step": 2,
@@ -67,34 +68,34 @@
           "prLineLimit": 700,
           "status": "merged",
           "prNumber": 4,
-          "mergedAt": "2026-06-07T15:10:00Z"
+          "mergedAt": "2026-06-07T15:10:00Z",
+          "stepNumber": 2
         },
         {
           "step": 3,
           "title": "회원가입/로그인 API",
           "prLineLimit": 800,
-          "status": "pending"
+          "status": "pending",
+          "stepNumber": 3
         },
         {
           "step": 4,
           "title": "Refresh Token 저장 + 재발급/로그아웃/me",
           "prLineLimit": 700,
-          "status": "pending"
+          "status": "pending",
+          "stepNumber": 4
         },
         {
           "step": 5,
           "title": "기존 API 접근 제어 + e2e 통합 테스트",
           "prLineLimit": 500,
-          "status": "pending"
+          "status": "pending",
+          "stepNumber": 5
         }
       ],
       "currentStep": 3,
       "createdAt": "2026-06-07T00:00:00Z",
-      "workflowState": {
-        "currentSkill": "crew-impl",
-        "lastReviewDecision": null,
-        "fixLoopCount": 0
-      }
+      "workflowState": null
     },
     "TASK-002": {
       "id": "TASK-002",
