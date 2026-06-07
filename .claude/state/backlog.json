@@ -2,9 +2,9 @@
   "metadata": {
     "lastTaskNumber": 7,
     "projectPrefix": "TASK",
-    "version": 44,
+    "version": 45,
     "createdAt": "2026-06-07T00:00:00Z",
-    "updatedAt": "2026-06-07T12:14:00Z"
+    "updatedAt": "2026-06-07T12:16:00Z"
   },
   "summary": {
     "total": 7,
@@ -31,7 +31,7 @@
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
       "assignee": "wejsa-u@hoji-20260607T121400Z",
-      "assignedAt": "2026-06-07T12:14:00Z",
+      "assignedAt": "2026-06-07T12:16:00Z",
       "lockTTL": 10800,
       "lockedFiles": [
         "build.gradle.kts",
@@ -75,9 +75,10 @@
           "step": 3,
           "title": "회원가입/로그인 API",
           "prLineLimit": 800,
-          "status": "pr_created",
+          "status": "merged",
           "stepNumber": 3,
-          "prNumber": 10
+          "prNumber": 10,
+          "mergedAt": "2026-06-07T12:16:00Z"
         },
         {
           "step": 4,
@@ -94,13 +95,12 @@
           "stepNumber": 5
         }
       ],
-      "currentStep": 3,
+      "currentStep": 4,
       "createdAt": "2026-06-07T00:00:00Z",
       "workflowState": {
-        "lastReviewDecision": "COMMENT",
-        "currentSkill": "crew-review-pr",
-        "fixLoopCount": 0,
-        "prNumber": 10
+        "currentSkill": "crew-merge-pr",
+        "lastReviewDecision": null,
+        "fixLoopCount": 0
       }
     },
     "TASK-002": {

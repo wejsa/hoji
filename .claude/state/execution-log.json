@@ -223,6 +223,14 @@
       "action": "task_completed",
       "taskId": "TASK-007",
       "prNumber": 11
+    },
+    {
+      "timestamp": "2026-06-07T12:16:00Z",
+      "action": "merged",
+      "taskId": "TASK-001",
+      "stepNumber": 3,
+      "prNumber": 10,
+      "skill": "crew-merge-pr"
     }
   ]
 }
