@@ -254,6 +254,14 @@
         "major": 4,
         "minor": 2
       }
+    },
+    {
+      "timestamp": "2026-06-07T12:58:43Z",
+      "action": "merged",
+      "taskId": "TASK-001",
+      "stepNumber": 4,
+      "prNumber": 12,
+      "detail": "Step 4 squash merged (보안 보강 H001/H002/H003/M002 포함)"
     }
   ]
 }
