@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 1,
     "projectPrefix": "TASK",
-    "version": 4,
+    "version": 5,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T00:00:00Z"
   },
@@ -31,7 +31,7 @@
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
       "assignee": "wejsa-u@hoji-20260607-132249",
-      "assignedAt": "2026-06-07T13:48:20Z",
+      "assignedAt": "2026-06-07T14:05:00Z",
       "lockTTL": 10800,
       "lockedFiles": [
         "build.gradle.kts",
@@ -53,7 +53,7 @@
         "src/main/kotlin/com/hoji/common/dto/ResultCode.kt"
       ],
       "steps": [
-        { "step": 1, "title": "의존성 + User 보안 필드 + Role", "prLineLimit": 200, "status": "todo" },
+        { "step": 1, "title": "의존성 + User 보안 필드 + Role", "prLineLimit": 200, "status": "pr_created", "prNumber": 3 },
         { "step": 2, "title": "JWT Provider + Security 설정", "prLineLimit": 700, "status": "todo" },
         { "step": 3, "title": "회원가입/로그인 API", "prLineLimit": 800, "status": "todo" },
         { "step": 4, "title": "Refresh Token 저장 + 재발급/로그아웃/me", "prLineLimit": 700, "status": "todo" },
