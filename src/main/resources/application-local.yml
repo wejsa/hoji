@@ -39,6 +39,11 @@ hoji:
     sensitive-headers:
       - authorization
       - x-api-key
+  cors:
+    # 로컬 개발 프론트엔드 오리진 (와일드카드 금지)
+    allowed-origins:
+      - http://localhost:3000
+      - http://localhost:8080
 
 server:
   error:
