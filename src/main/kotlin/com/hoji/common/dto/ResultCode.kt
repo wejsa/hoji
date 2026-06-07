@@ -13,7 +13,9 @@ enum class ResultCode(
     // Client Errors (4xxx)
     BAD_REQUEST("4000", "Bad Request"),
     UNAUTHORIZED("4001", "Unauthorized"),
+    TOKEN_EXPIRED("4002", "Token Expired"),
     FORBIDDEN("4003", "Forbidden"),
+    INVALID_TOKEN("4007", "Invalid Token"),
     NOT_FOUND("4004", "Not Found"),
     METHOD_NOT_ALLOWED("4005", "Method Not Allowed"),
     CONFLICT("4009", "Conflict"),

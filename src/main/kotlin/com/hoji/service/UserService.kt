@@ -10,7 +10,6 @@ import com.hoji.domain.UserStatus
 import com.hoji.repository.UserRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,11 +22,9 @@ private val logger = KotlinLogging.logger {}
 @Service
 @Transactional(readOnly = true)
 class UserService(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder
 ) {
-
-    // Step 2에서 SecurityConfig의 PasswordEncoder 빈 주입으로 대체 예정
-    private val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
 
     /**
      * 사용자 생성
