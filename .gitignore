@@ -1,7 +1,6 @@
 # Gradle
 .gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
@@ -38,6 +37,8 @@ spring-boot-starter-parent/
 *.zip
 *.tar.gz
 *.rar
+# gradle wrapper jar는 *.jar 무시 이후에 화이트리스트해야 유효 (순서 중요)
+!gradle/wrapper/gradle-wrapper.jar
 
 # virtual machine crash logs
 hs_err_pid*
