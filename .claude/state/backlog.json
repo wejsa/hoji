@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 20,
+    "version": 21,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -127,13 +127,17 @@
       "id": "TASK-003",
       "title": "backlog step.status enum 위반 정정 (todo → pending)",
       "description": "TASK-001의 step 3/4/5가 step.status로 허용되지 않는 'todo' 값을 사용한다. step.status 허용 enum은 pending·in_progress·pr_created·merged·done·skipped이며 'todo'는 task.status용이다. step 3/4/5의 status를 'pending'으로 정정. crew-health-check SI-04(MAJOR)에서 자동 등록.",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "major",
       "type": "chore",
       "phase": 1,
       "dependencies": [],
       "source": "health-check:SI-04",
-      "createdAt": "2026-06-07T07:31:21Z"
+      "createdAt": "2026-06-07T07:31:21Z",
+      "assignee": "wejsa-u@hoji-20260607T090606Z",
+      "assignedAt": "2026-06-07T09:06:06Z",
+      "lockTTL": 1800,
+      "lockedFiles": []
     },
     "TASK-004": {
       "id": "TASK-004",
