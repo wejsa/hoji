@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 1,
     "projectPrefix": "TASK",
-    "version": 3,
+    "version": 4,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T00:00:00Z"
   },
@@ -32,10 +32,34 @@
       "specFile": "docs/requirements/TASK-001-spec.md",
       "assignee": "wejsa-u@hoji-20260607-132249",
       "assignedAt": "2026-06-07T13:48:20Z",
-      "lockTTL": 1800,
-      "lockedFiles": [],
-      "steps": [],
-      "currentStep": 0,
+      "lockTTL": 10800,
+      "lockedFiles": [
+        "build.gradle.kts",
+        "src/main/resources/application.yml",
+        "src/main/kotlin/com/hoji/domain/User.kt",
+        "src/main/kotlin/com/hoji/domain/Role.kt",
+        "src/main/kotlin/com/hoji/domain/RefreshToken.kt",
+        "src/main/kotlin/com/hoji/repository/RefreshTokenRepository.kt",
+        "src/main/kotlin/com/hoji/security/JwtTokenProvider.kt",
+        "src/main/kotlin/com/hoji/security/JwtAuthenticationFilter.kt",
+        "src/main/kotlin/com/hoji/security/JwtAuthenticationEntryPoint.kt",
+        "src/main/kotlin/com/hoji/security/JwtAccessDeniedHandler.kt",
+        "src/main/kotlin/com/hoji/config/SecurityConfig.kt",
+        "src/main/kotlin/com/hoji/service/AuthService.kt",
+        "src/main/kotlin/com/hoji/service/CustomUserDetailsService.kt",
+        "src/main/kotlin/com/hoji/controller/AuthController.kt",
+        "src/main/kotlin/com/hoji/controller/UserController.kt",
+        "src/main/kotlin/com/hoji/controller/dto/AuthDto.kt",
+        "src/main/kotlin/com/hoji/common/dto/ResultCode.kt"
+      ],
+      "steps": [
+        { "step": 1, "title": "의존성 + User 보안 필드 + Role", "prLineLimit": 200, "status": "todo" },
+        { "step": 2, "title": "JWT Provider + Security 설정", "prLineLimit": 700, "status": "todo" },
+        { "step": 3, "title": "회원가입/로그인 API", "prLineLimit": 800, "status": "todo" },
+        { "step": 4, "title": "Refresh Token 저장 + 재발급/로그아웃/me", "prLineLimit": 700, "status": "todo" },
+        { "step": 5, "title": "기존 API 접근 제어 + e2e 통합 테스트", "prLineLimit": 500, "status": "todo" }
+      ],
+      "currentStep": 1,
       "createdAt": "2026-06-07T00:00:00Z"
     }
   }
