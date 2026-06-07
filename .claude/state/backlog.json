@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 26,
+    "version": 27,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -127,15 +127,15 @@
       "id": "TASK-003",
       "title": "backlog step.status enum 위반 정정 (todo → pending)",
       "description": "TASK-001의 step 3/4/5가 step.status로 허용되지 않는 'todo' 값을 사용한다. step.status 허용 enum은 pending·in_progress·pr_created·merged·done·skipped이며 'todo'는 task.status용이다. step 3/4/5의 status를 'pending'으로 정정. crew-health-check SI-04(MAJOR)에서 자동 등록.",
-      "status": "paused",
+      "status": "in_progress",
       "priority": "major",
       "type": "chore",
       "phase": 1,
       "dependencies": [],
       "source": "health-check:SI-04",
       "createdAt": "2026-06-07T07:31:21Z",
-      "assignee": "wejsa-u@hoji-20260607T090606Z",
-      "assignedAt": "2026-06-07T09:12:13Z",
+      "assignee": "wejsa-u@hoji-20260607T093345Z",
+      "assignedAt": "2026-06-07T09:33:45Z",
       "lockTTL": 3600,
       "lockedFiles": [
         ".claude/state/backlog.json"
@@ -151,9 +151,7 @@
           "status": "pending",
           "lineLimit": 100
         }
-      ],
-      "pauseReason": "TASK-006(kapt/JDK21 빌드 수정) 머지로 develop green 후 재개",
-      "pausedAt": "2026-06-07T09:29:00Z"
+      ]
     },
     "TASK-004": {
       "id": "TASK-004",
