@@ -231,6 +231,29 @@
       "stepNumber": 3,
       "prNumber": 10,
       "skill": "crew-merge-pr"
+    },
+    {
+      "timestamp": "2026-06-07T12:30:00Z",
+      "action": "pr_created",
+      "taskId": "TASK-001",
+      "stepNumber": 4,
+      "prNumber": 12,
+      "skill": "crew-impl"
+    },
+    {
+      "timestamp": "2026-06-07T12:45:00Z",
+      "action": "approved",
+      "decision": "COMMENT",
+      "taskId": "TASK-001",
+      "stepNumber": 4,
+      "prNumber": 12,
+      "skill": "crew-review-pr",
+      "tier": "T3",
+      "posted": {
+        "critical": 0,
+        "major": 4,
+        "minor": 2
+      }
     }
   ]
 }

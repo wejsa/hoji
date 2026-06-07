@@ -2,9 +2,9 @@
   "metadata": {
     "lastTaskNumber": 7,
     "projectPrefix": "TASK",
-    "version": 45,
+    "version": 47,
     "createdAt": "2026-06-07T00:00:00Z",
-    "updatedAt": "2026-06-07T12:16:00Z"
+    "updatedAt": "2026-06-07T12:45:00Z"
   },
   "summary": {
     "total": 7,
@@ -31,7 +31,7 @@
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
       "assignee": "wejsa-u@hoji-20260607T121400Z",
-      "assignedAt": "2026-06-07T12:16:00Z",
+      "assignedAt": "2026-06-07T12:30:00Z",
       "lockTTL": 10800,
       "lockedFiles": [
         "build.gradle.kts",
@@ -84,8 +84,9 @@
           "step": 4,
           "title": "Refresh Token 저장 + 재발급/로그아웃/me",
           "prLineLimit": 700,
-          "status": "pending",
-          "stepNumber": 4
+          "status": "pr_created",
+          "stepNumber": 4,
+          "prNumber": 12
         },
         {
           "step": 5,
@@ -98,9 +99,10 @@
       "currentStep": 4,
       "createdAt": "2026-06-07T00:00:00Z",
       "workflowState": {
-        "currentSkill": "crew-merge-pr",
-        "lastReviewDecision": null,
-        "fixLoopCount": 0
+        "currentSkill": "crew-review-pr",
+        "lastReviewDecision": "COMMENT",
+        "fixLoopCount": 0,
+        "prNumber": 12
       }
     },
     "TASK-002": {
