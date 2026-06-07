@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 1,
     "projectPrefix": "TASK",
-    "version": 6,
+    "version": 7,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T00:00:00Z"
   },
@@ -31,7 +31,7 @@
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
       "assignee": "wejsa-u@hoji-20260607-132249",
-      "assignedAt": "2026-06-07T14:05:00Z",
+      "assignedAt": "2026-06-07T14:30:00Z",
       "lockTTL": 10800,
       "lockedFiles": [
         "build.gradle.kts",
@@ -57,8 +57,9 @@
           "step": 1,
           "title": "의존성 + User 보안 필드 + Role",
           "prLineLimit": 200,
-          "status": "pr_created",
-          "prNumber": 3
+          "status": "merged",
+          "prNumber": 3,
+          "mergedAt": "2026-06-07T05:29:23Z"
         },
         {
           "step": 2,
@@ -85,11 +86,11 @@
           "status": "todo"
         }
       ],
-      "currentStep": 1,
+      "currentStep": 2,
       "createdAt": "2026-06-07T00:00:00Z",
       "workflowState": {
-        "currentSkill": "crew-review-pr",
-        "lastReviewDecision": "COMMENT",
+        "currentSkill": "crew-impl",
+        "lastReviewDecision": null,
         "fixLoopCount": 0
       }
     }
