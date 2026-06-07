@@ -37,8 +37,8 @@ dependencies {
     // WebClient
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
-    // Security - 비밀번호 해싱 (필터체인 활성화 starter-security는 Step 2에서 추가)
-    implementation("org.springframework.security:spring-security-crypto")
+    // Security - Spring Security 필터체인 + BCrypt
+    implementation("org.springframework.boot:spring-boot-starter-security")
 
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
@@ -65,6 +65,7 @@ dependencies {
     testImplementation("org.springframework.amqp:spring-rabbit-test")
     testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<KotlinCompile> {

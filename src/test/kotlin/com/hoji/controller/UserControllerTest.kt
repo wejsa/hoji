@@ -15,6 +15,7 @@ import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
@@ -26,6 +27,8 @@ import java.time.LocalDateTime
 
 @WebMvcTest(
     controllers = [UserController::class],
+    // 보안 자동설정은 컨트롤러 로직 단위 테스트 범위 밖(인증/인가 e2e는 Step 5 통합 테스트에서 검증).
+    excludeAutoConfiguration = [SecurityAutoConfiguration::class],
     // @WebMvcTest는 WebMvcConfigurer와 모든 HandlerInterceptor를 슬라이스에 자동 포함한다.
     // 커스텀 인터셉터들은 LoggingProperties/CustomMetrics 등 비-웹 빈에 의존하므로
     // 컨트롤러 단위 테스트에서는 제외한다.
