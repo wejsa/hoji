@@ -1,5 +1,6 @@
 package com.hoji.config
 
+import com.hoji.config.properties.CorsProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.cors.CorsConfiguration
@@ -7,41 +8,34 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 
 /**
- * CORS 설정
+ * CORS 설정.
+ *
+ * 허용 오리진은 [CorsProperties] (`hoji.cors.*`)로 외부화한다.
+ * 와일드카드(`*`) + 자격증명 동시 허용은 [CorsProperties.validate]가 시작 시 차단한다.
  */
 @Configuration
-class CorsConfig {
+class CorsConfig(
+    private val corsProperties: CorsProperties,
+) {
 
     @Bean
     fun corsFilter(): CorsFilter {
-        val config = CorsConfiguration()
-
-        // 허용할 오리진 (환경별로 다르게 설정 필요)
-        config.allowedOriginPatterns = listOf("*")  // Prod에서는 특정 도메인만 허용
-
-        // 허용할 HTTP 메서드
-        config.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-
-        // 허용할 헤더
-        config.allowedHeaders = listOf("*")
-
-        // 노출할 헤더
-        config.exposedHeaders = listOf(
-            "X-Request-ID",
-            "Authorization",
-            "Content-Type",
-            "Content-Disposition"
-        )
-
-        // 인증 정보 포함 허용
-        config.allowCredentials = true
-
-        // Preflight 요청 캐시 시간 (초)
-        config.maxAge = 3600L
-
         val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", config)
-
+        source.registerCorsConfiguration("/**", corsConfiguration())
         return CorsFilter(source)
+    }
+
+    /**
+     * 설정값([CorsProperties])을 [CorsConfiguration]에 매핑한다.
+     * 매핑 정확성을 단위 테스트로 검증할 수 있도록 빈 생성과 분리했다.
+     */
+    fun corsConfiguration(): CorsConfiguration = CorsConfiguration().apply {
+        // 허용 오리진 — 설정값(환경별)으로 외부화. 와일드카드 하드코딩 제거.
+        allowedOrigins = corsProperties.allowedOrigins
+        allowedMethods = corsProperties.allowedMethods
+        allowedHeaders = corsProperties.allowedHeaders
+        exposedHeaders = corsProperties.exposedHeaders
+        allowCredentials = corsProperties.allowCredentials
+        maxAge = corsProperties.maxAgeSeconds
     }
 }

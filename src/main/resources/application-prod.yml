@@ -59,6 +59,9 @@ hoji:
       - api-key
       - access-token
       - refresh-token
+  cors:
+    # 운영 허용 오리진 — 반드시 env CORS_ALLOWED_ORIGINS(쉼표 구분)로 실제 도메인 주입. 와일드카드 금지.
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://app.hoji.example.com}
 
 server:
   error:

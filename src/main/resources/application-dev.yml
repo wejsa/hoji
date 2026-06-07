@@ -47,6 +47,9 @@ hoji:
       - x-api-key
       - x-auth-token
       - x-csrf-token
+  cors:
+    # Dev 서버 프론트 오리진. env CORS_ALLOWED_ORIGINS(쉼표 구분)로 재정의 가능. 와일드카드 금지.
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,https://dev.hoji.example.com}
 
 server:
   error:
