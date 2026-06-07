@@ -20,19 +20,22 @@ class CorsConfig(
 
     @Bean
     fun corsFilter(): CorsFilter {
-        val config = CorsConfiguration()
-
-        // 허용 오리진 — 설정값(환경별)으로 외부화. 와일드카드 하드코딩 제거.
-        config.allowedOrigins = corsProperties.allowedOrigins
-        config.allowedMethods = corsProperties.allowedMethods
-        config.allowedHeaders = corsProperties.allowedHeaders
-        config.exposedHeaders = corsProperties.exposedHeaders
-        config.allowCredentials = corsProperties.allowCredentials
-        config.maxAge = corsProperties.maxAgeSeconds
-
         val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", config)
-
+        source.registerCorsConfiguration("/**", corsConfiguration())
         return CorsFilter(source)
+    }
+
+    /**
+     * 설정값([CorsProperties])을 [CorsConfiguration]에 매핑한다.
+     * 매핑 정확성을 단위 테스트로 검증할 수 있도록 빈 생성과 분리했다.
+     */
+    fun corsConfiguration(): CorsConfiguration = CorsConfiguration().apply {
+        // 허용 오리진 — 설정값(환경별)으로 외부화. 와일드카드 하드코딩 제거.
+        allowedOrigins = corsProperties.allowedOrigins
+        allowedMethods = corsProperties.allowedMethods
+        allowedHeaders = corsProperties.allowedHeaders
+        exposedHeaders = corsProperties.exposedHeaders
+        allowCredentials = corsProperties.allowCredentials
+        maxAge = corsProperties.maxAgeSeconds
     }
 }

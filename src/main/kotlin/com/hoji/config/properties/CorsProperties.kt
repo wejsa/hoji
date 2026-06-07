@@ -28,15 +28,18 @@ data class CorsProperties(
 ) {
     @PostConstruct
     fun validate() {
-        require(!(allowCredentials && allowedOrigins.contains(WILDCARD))) {
+        require(!(allowCredentials && hasWildcardOrigin())) {
             "hoji.cors: allowCredentials=true와 allowedOrigins '$WILDCARD'는 동시 사용 불가. " +
                 "허용 오리진을 명시하세요."
         }
         val isProd = System.getenv("SPRING_PROFILES_ACTIVE")?.contains("prod") == true
-        require(!(isProd && allowedOrigins.contains(WILDCARD))) {
+        require(!(isProd && hasWildcardOrigin())) {
             "Production CORS에 와일드카드 오리진('$WILDCARD')은 사용할 수 없습니다. 허용 도메인을 명시하세요."
         }
     }
+
+    /** 공백을 무시하고 와일드카드('*') 오리진 포함 여부를 검사한다 (`" * "` 우회 차단). */
+    private fun hasWildcardOrigin(): Boolean = allowedOrigins.any { it.trim() == WILDCARD }
 
     companion object {
         private const val WILDCARD = "*"
