@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 32,
+    "version": 33,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -190,7 +190,7 @@
       "source": "review:PR#6:H001,H002",
       "createdAt": "2026-06-07T09:00:00Z",
       "assignee": "wejsa-u@hoji-20260607T094949Z",
-      "assignedAt": "2026-06-07T10:14:37Z",
+      "assignedAt": "2026-06-07T10:19:20Z",
       "lockTTL": 7200,
       "lockedFiles": [
         "src/main/kotlin/com/hoji/config/properties/CorsProperties.kt",
@@ -213,8 +213,9 @@
             "src/test/kotlin/com/hoji/config/properties/JwtPropertiesTest.kt",
             "src/test/kotlin/com/hoji/config/PropertiesProfileValidatorTest.kt"
           ],
-          "status": "pending",
-          "lineLimit": 600
+          "status": "pr_created",
+          "lineLimit": 600,
+          "prNumber": 9
         }
       ]
     },
