@@ -1,17 +1,17 @@
 {
   "metadata": {
-    "lastTaskNumber": 5,
+    "lastTaskNumber": 7,
     "projectPrefix": "TASK",
-    "version": 39,
+    "version": 40,
     "createdAt": "2026-06-07T00:00:00Z",
-    "updatedAt": "2026-06-07T09:05:00Z"
+    "updatedAt": "2026-06-07T10:45:00Z"
   },
   "summary": {
-    "total": 5,
-    "done": 2,
-    "inProgress": 1,
+    "total": 7,
+    "done": 5,
+    "inProgress": 2,
     "review": 0,
-    "todo": 2
+    "todo": 0
   },
   "phases": {
     "1": {
@@ -250,13 +250,36 @@
       "id": "TASK-007",
       "title": "PropertiesProfileValidator 테스트 보강 (prod 통합 테스트 + 다원소 프로파일)",
       "description": "PR #9(TASK-005) 리뷰 MAJOR 후속. ①H001: 신규 단위테스트가 MockEnvironment.setActiveProfiles() 직접 호출이라 'spring.profiles.active 프로퍼티/-D/yml이 Environment.getActiveProfiles()로 반영된다'는 PR 핵심 가정 미검증 → @SpringBootTest(properties=[spring.profiles.active=prod]) 통합 테스트로 prod 가드 발동 고정(회귀 앵커). ②H002: isProdProfile의 any{}가 다원소 배열(예: [dev,prod]) 순회를 검증 안 함 → 혼재 케이스 추가. 선택: M001 prod 부분일치(equals/startsWith-prod- 또는 네이밍 문서화).",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "major",
       "type": "chore",
       "phase": 1,
       "dependencies": [],
       "source": "review:PR#9:H001,H002",
-      "createdAt": "2026-06-07T10:24:18Z"
+      "createdAt": "2026-06-07T10:24:18Z",
+      "planFile": ".claude/temp/TASK-007-plan.md",
+      "assignee": "wejsa-u@hoji-20260607-104500",
+      "assignedAt": "2026-06-07T10:45:00Z",
+      "lockTTL": 3600,
+      "lockedFiles": [
+        "src/test/kotlin/com/hoji/config/PropertiesProfileValidatorIntegrationTest.kt",
+        "src/test/kotlin/com/hoji/config/PropertiesProfileValidatorTest.kt",
+        "src/main/kotlin/com/hoji/config/PropertiesProfileValidator.kt"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "prod 통합 테스트 + 다원소 프로파일 + isProd 정밀화",
+          "prLineLimit": 400,
+          "status": "pending"
+        }
+      ],
+      "currentStep": 1,
+      "workflowState": {
+        "currentSkill": "crew-plan",
+        "lastReviewDecision": null,
+        "fixLoopCount": 0
+      }
     }
   }
 }
