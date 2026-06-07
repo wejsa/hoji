@@ -12,7 +12,9 @@ import com.fasterxml.jackson.module.kotlin.readValue
  */
 object JsonUtils {
 
-    private val objectMapper: ObjectMapper = jacksonObjectMapper().apply {
+    // inline fun(fromJson/fromMap)에서 접근하므로 @PublishedApi internal 노출
+    @PublishedApi
+    internal val objectMapper: ObjectMapper = jacksonObjectMapper().apply {
         registerModule(KotlinModule.Builder().build())
         registerModule(JavaTimeModule())
         disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)

@@ -37,6 +37,14 @@ dependencies {
     // WebClient
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
+    // Security - 비밀번호 해싱 (필터체인 활성화 starter-security는 Step 2에서 추가)
+    implementation("org.springframework.security:spring-security-crypto")
+
+    // JWT
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+
     // QueryDSL
     implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
     kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")

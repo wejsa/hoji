@@ -8,6 +8,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.web.client.RestTemplate
 import java.time.Duration
+import java.util.function.Supplier
 
 /**
  * RestTemplate 설정
@@ -20,7 +21,7 @@ class RestTemplateConfig {
         return restTemplateBuilder
             .setConnectTimeout(Duration.ofSeconds(10))
             .setReadTimeout(Duration.ofSeconds(10))
-            .requestFactory { BufferingClientHttpRequestFactory(SimpleClientHttpRequestFactory()) }
+            .requestFactory(Supplier { BufferingClientHttpRequestFactory(SimpleClientHttpRequestFactory()) })
             .interceptors(loggingInterceptor())
             .build()
     }
