@@ -2,9 +2,9 @@
   "metadata": {
     "lastTaskNumber": 4,
     "projectPrefix": "TASK",
-    "version": 12,
+    "version": 13,
     "createdAt": "2026-06-07T00:00:00Z",
-    "updatedAt": "2026-06-07T07:32:00Z"
+    "updatedAt": "2026-06-07T08:10:00Z"
   },
   "summary": {
     "total": 4,
@@ -108,25 +108,27 @@
       "source": "health-check:DS-01,DS-02",
       "planFile": ".claude/temp/TASK-002-plan.md",
       "assignee": "wejsa-u@hoji-20260607-163121",
-      "assignedAt": "2026-06-07T07:31:21Z",
+      "assignedAt": "2026-06-07T08:10:00Z",
       "lockTTL": 3600,
       "lockedFiles": [
         "gradle/wrapper/gradle-wrapper.jar",
         "gradlew",
-        "gradlew.bat"
+        "gradlew.bat",
+        ".gitignore"
       ],
       "steps": [
         {
           "step": 1,
           "title": "wrapper jar 복구 + 빌드 게이트 검증",
           "prLineLimit": 100,
-          "status": "pending"
+          "status": "pr_created",
+          "prNumber": 5
         }
       ],
       "currentStep": 1,
       "createdAt": "2026-06-07T07:31:21Z",
       "workflowState": {
-        "currentSkill": "crew-plan",
+        "currentSkill": "crew-impl",
         "lastReviewDecision": null,
         "fixLoopCount": 0
       }
