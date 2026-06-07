@@ -8,12 +8,16 @@ import com.hoji.service.UserService
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 private val logger = KotlinLogging.logger {}
 
 /**
- * 사용자 API 컨트롤러
+ * 사용자 API 컨트롤러.
+ *
+ * 접근 제어(Step 5): 생성/목록/삭제는 ADMIN 전용, 단건 조회/수정은 ADMIN 또는 본인만 허용한다.
+ * 인증 자체는 SecurityConfig(anyRequest authenticated)가 강제하며, 여기서는 권한(RBAC)을 좁힌다.
  */
 @RestController
 @RequestMapping("/api/v1/users")
@@ -22,8 +26,9 @@ class UserController(
 ) {
 
     /**
-     * 사용자 생성
+     * 사용자 생성 (ADMIN 전용)
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createUser(@Valid @RequestBody request: CreateUserRequest): ApiResponse<UserResponse> {
@@ -33,8 +38,9 @@ class UserController(
     }
 
     /**
-     * 사용자 조회
+     * 사용자 조회 (ADMIN 또는 본인)
      */
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isSelf(#id, authentication)")
     @GetMapping("/{id}")
     fun getUser(@PathVariable id: Long): ApiResponse<UserResponse> {
         logger.info { "Getting user: $id" }
@@ -43,8 +49,9 @@ class UserController(
     }
 
     /**
-     * 사용자 목록 조회
+     * 사용자 목록 조회 (ADMIN 전용)
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     fun getAllUsers(
         @RequestParam(required = false, defaultValue = "false") activeOnly: Boolean
@@ -59,8 +66,9 @@ class UserController(
     }
 
     /**
-     * 사용자 수정
+     * 사용자 수정 (ADMIN 또는 본인)
      */
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isSelf(#id, authentication)")
     @PutMapping("/{id}")
     fun updateUser(
         @PathVariable id: Long,
@@ -72,8 +80,9 @@ class UserController(
     }
 
     /**
-     * 사용자 삭제
+     * 사용자 삭제 (ADMIN 전용)
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteUser(@PathVariable id: Long): ApiResponse<Unit> {
