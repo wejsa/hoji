@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 1,
     "projectPrefix": "TASK",
-    "version": 5,
+    "version": 6,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T00:00:00Z"
   },
@@ -53,14 +53,45 @@
         "src/main/kotlin/com/hoji/common/dto/ResultCode.kt"
       ],
       "steps": [
-        { "step": 1, "title": "의존성 + User 보안 필드 + Role", "prLineLimit": 200, "status": "pr_created", "prNumber": 3 },
-        { "step": 2, "title": "JWT Provider + Security 설정", "prLineLimit": 700, "status": "todo" },
-        { "step": 3, "title": "회원가입/로그인 API", "prLineLimit": 800, "status": "todo" },
-        { "step": 4, "title": "Refresh Token 저장 + 재발급/로그아웃/me", "prLineLimit": 700, "status": "todo" },
-        { "step": 5, "title": "기존 API 접근 제어 + e2e 통합 테스트", "prLineLimit": 500, "status": "todo" }
+        {
+          "step": 1,
+          "title": "의존성 + User 보안 필드 + Role",
+          "prLineLimit": 200,
+          "status": "pr_created",
+          "prNumber": 3
+        },
+        {
+          "step": 2,
+          "title": "JWT Provider + Security 설정",
+          "prLineLimit": 700,
+          "status": "todo"
+        },
+        {
+          "step": 3,
+          "title": "회원가입/로그인 API",
+          "prLineLimit": 800,
+          "status": "todo"
+        },
+        {
+          "step": 4,
+          "title": "Refresh Token 저장 + 재발급/로그아웃/me",
+          "prLineLimit": 700,
+          "status": "todo"
+        },
+        {
+          "step": 5,
+          "title": "기존 API 접근 제어 + e2e 통합 테스트",
+          "prLineLimit": 500,
+          "status": "todo"
+        }
       ],
       "currentStep": 1,
-      "createdAt": "2026-06-07T00:00:00Z"
+      "createdAt": "2026-06-07T00:00:00Z",
+      "workflowState": {
+        "currentSkill": "crew-review-pr",
+        "lastReviewDecision": "COMMENT",
+        "fixLoopCount": 0
+      }
     }
   }
 }
