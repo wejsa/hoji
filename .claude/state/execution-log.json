@@ -71,6 +71,21 @@
         "minor": 2
       },
       "dropped": 3
+    },
+    {
+      "timestamp": "2026-06-07T09:05:00Z",
+      "action": "merged",
+      "taskId": "TASK-004",
+      "stepNumber": 1,
+      "prNumber": 6,
+      "skill": "crew-merge-pr"
+    },
+    {
+      "timestamp": "2026-06-07T09:05:00Z",
+      "action": "task_completed",
+      "taskId": "TASK-004",
+      "prNumber": 6,
+      "postMergeGate": "BUILD SUCCESSFUL"
     }
   ]
 }
