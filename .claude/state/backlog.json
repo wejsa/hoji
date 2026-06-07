@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 25,
+    "version": 26,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -198,19 +198,13 @@
       "id": "TASK-006",
       "title": "Gradle kapt JDK 21 빌드 실패 수정 (org.gradle.jvmargs add-opens)",
       "description": "JDK 21 + Kotlin 1.9.20 kapt 비호환으로 :kaptKotlin 빌드 실패(IllegalAccessError: jdk.compiler가 com.sun.tools.javac.main을 unnamed module에 미export). add-opens가 kotlin.daemon.jvmargs에만 있어, Gradle 워커(KaptWithoutKotlincTask)가 따르는 org.gradle.jvmargs에는 미적용되어 워커에서 실패. org.gradle.jvmargs에도 동일 add-opens 11종 추가. 모든 코드 Task(TASK-001/003/005)의 빌드/테스트 실행을 막던 선재 블로커. TASK-003 빌드 게이트에서 발견.",
-      "status": "in_progress",
+      "status": "done",
       "priority": "critical",
       "type": "bug",
       "phase": 1,
       "dependencies": [],
       "source": "crew-impl:TASK-003 build-gate",
       "createdAt": "2026-06-07T09:29:00Z",
-      "assignee": "wejsa-u@hoji-20260607T092900Z",
-      "assignedAt": "2026-06-07T09:31:02Z",
-      "lockTTL": 3600,
-      "lockedFiles": [
-        "gradle.properties"
-      ],
       "currentStep": 1,
       "steps": [
         {
@@ -219,17 +213,14 @@
           "files": [
             "gradle.properties"
           ],
-          "status": "pr_created",
+          "status": "merged",
           "lineLimit": 100,
-          "prNumber": 7
+          "prNumber": 7,
+          "mergedAt": "2026-06-07T09:33:14Z"
         }
       ],
-      "workflowState": {
-        "lastReviewDecision": "COMMENT",
-        "currentSkill": "crew-review-pr",
-        "fixLoopCount": 0,
-        "prNumber": 7
-      }
+      "workflowState": null,
+      "completedAt": "2026-06-07T09:33:14Z"
     }
   }
 }
