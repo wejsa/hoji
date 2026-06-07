@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "history": [
+    {
+      "timestamp": "2026-06-07T07:31:21Z",
+      "mode": "full",
+      "score": 68,
+      "grade": "AT_RISK",
+      "criticalCount": 2,
+      "majorCount": 2,
+      "minorCount": 0,
+      "categories": {
+        "doc-sync": { "score": 50, "capped": true, "pass": 4, "fail": 2, "skip": 1 },
+        "state-integrity": { "score": 80, "capped": false, "pass": 4, "fail": 1, "skip": 0 },
+        "security": { "score": 80, "capped": false, "pass": 4, "fail": 1, "skip": 1 },
+        "agent-config": { "score": null, "excluded": true, "reason": "all SKIP (plugin-install mode, no local skills)" },
+        "hook-safety": { "score": null, "excluded": true, "reason": "all SKIP (no project hooks field / no .claude/hooks/)" }
+      },
+      "fails": [
+        { "id": "DS-01", "severity": "CRITICAL", "title": "빌드 명령어 실행 실패 (gradle-wrapper.jar 누락)" },
+        { "id": "DS-02", "severity": "CRITICAL", "title": "테스트 명령어 실행 실패 (gradle-wrapper.jar 누락)" },
+        { "id": "SI-04", "severity": "MAJOR", "title": "backlog step.status enum 위반 (todo)" },
+        { "id": "SEC-03", "severity": "MAJOR", "title": "CORS 와일드카드 오리진 + allowCredentials" }
+      ]
+    }
+  ]
+}
