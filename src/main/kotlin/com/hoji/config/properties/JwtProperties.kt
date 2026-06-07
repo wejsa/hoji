@@ -15,12 +15,21 @@ data class JwtProperties(
     var accessTokenValidityMs: Long = 1_800_000,        // 30분
     var refreshTokenValidityMs: Long = 1_209_600_000    // 14일
 ) {
+    /** 환경(프로파일) 무관 불변식. 바인딩 직후 fail-fast. */
     @PostConstruct
     fun validate() {
         require(secret.toByteArray().size >= MIN_SECRET_BYTES) {
             "jwt.secret must be at least 256 bits ($MIN_SECRET_BYTES bytes) for HS256"
         }
-        val isProd = System.getenv("SPRING_PROFILES_ACTIVE")?.contains("prod") == true
+    }
+
+    /**
+     * prod 프로파일 의존 검증. prod에서 기본 시크릿 사용을 차단한다.
+     *
+     * prod 판정은 [com.hoji.config.PropertiesProfileValidator]가 Spring [org.springframework.core.env.Environment]
+     * 기반으로 산출해 주입한다(과거 `System.getenv`만 보던 우회 경로 차단). `isProd`를 순수 입력으로 받아 단위 테스트 가능하다.
+     */
+    fun validateForProfile(isProd: Boolean) {
         require(!(isProd && secret.startsWith(DEFAULT_SECRET_PREFIX))) {
             "Default jwt.secret detected in production. Inject a strong JWT_SECRET env var."
         }
