@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 38,
+    "version": 39,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -96,7 +96,12 @@
       ],
       "currentStep": 3,
       "createdAt": "2026-06-07T00:00:00Z",
-      "workflowState": null
+      "workflowState": {
+        "lastReviewDecision": "COMMENT",
+        "currentSkill": "crew-review-pr",
+        "fixLoopCount": 0,
+        "prNumber": 10
+      }
     },
     "TASK-002": {
       "id": "TASK-002",
