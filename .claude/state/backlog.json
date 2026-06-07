@@ -2,16 +2,16 @@
   "metadata": {
     "lastTaskNumber": 4,
     "projectPrefix": "TASK",
-    "version": 11,
+    "version": 12,
     "createdAt": "2026-06-07T00:00:00Z",
-    "updatedAt": "2026-06-07T07:31:21Z"
+    "updatedAt": "2026-06-07T07:32:00Z"
   },
   "summary": {
     "total": 4,
     "done": 0,
-    "inProgress": 1,
+    "inProgress": 2,
     "review": 0,
-    "todo": 3
+    "todo": 2
   },
   "phases": {
     "1": {
@@ -99,14 +99,37 @@
     "TASK-002": {
       "id": "TASK-002",
       "title": "Gradle wrapper jar 누락 복구 (빌드/테스트 실행 불가)",
-      "description": "gradle/wrapper/gradle-wrapper.jar이 git에 추적되지 않아 ./gradlew build·./gradlew test가 종료코드 1로 실패한다(GradleWrapperMain ClassNotFound). 신선한 체크아웃·CI에서 빌드 불가. `gradle wrapper --gradle-version <ver>`로 jar 재생성 후 커밋. .gitignore는 이미 `!gradle/wrapper/gradle-wrapper.jar` 예외 처리됨. crew-health-check DS-01/DS-02(CRITICAL)에서 자동 등록.",
-      "status": "todo",
+      "description": "gradle/wrapper/gradle-wrapper.jar이 git에 추적되지 않아 ./gradlew build·./gradlew test가 종료코드 1로 실패한다(GradleWrapperMain ClassNotFound). 신선한 체크아웃·CI에서 빌드 불가. `gradle wrapper --gradle-version 8.5`로 jar 재생성 후 커밋. .gitignore는 이미 `!gradle/wrapper/gradle-wrapper.jar` 예외 처리됨. crew-health-check DS-01/DS-02(CRITICAL)에서 자동 등록.",
+      "status": "in_progress",
       "priority": "critical",
       "type": "bug",
       "phase": 1,
       "dependencies": [],
       "source": "health-check:DS-01,DS-02",
-      "createdAt": "2026-06-07T07:31:21Z"
+      "planFile": ".claude/temp/TASK-002-plan.md",
+      "assignee": "wejsa-u@hoji-20260607-163121",
+      "assignedAt": "2026-06-07T07:31:21Z",
+      "lockTTL": 3600,
+      "lockedFiles": [
+        "gradle/wrapper/gradle-wrapper.jar",
+        "gradlew",
+        "gradlew.bat"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "wrapper jar 복구 + 빌드 게이트 검증",
+          "prLineLimit": 100,
+          "status": "pending"
+        }
+      ],
+      "currentStep": 1,
+      "createdAt": "2026-06-07T07:31:21Z",
+      "workflowState": {
+        "currentSkill": "crew-plan",
+        "lastReviewDecision": null,
+        "fixLoopCount": 0
+      }
     },
     "TASK-003": {
       "id": "TASK-003",
