@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 35,
+    "version": 36,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -182,24 +182,13 @@
       "id": "TASK-005",
       "title": "CORS/JWT prod 프로파일 감지를 Environment 기반으로 강화",
       "description": "CorsProperties.validate()와 JwtProperties.validate()의 prod 판정이 System.getenv(\"SPRING_PROFILES_ACTIVE\")에만 의존해, spring.profiles.active 프로퍼티/-D/yml로 prod 활성 시 prod 와일드카드·기본시크릿 가드가 우회된다(테스트도 불가). Environment.activeProfiles 주입 기반으로 두 Properties를 공통 강화하고 prod 분기 단위 테스트 추가. PR #6 리뷰 H001/H002(MAJOR) 후속.",
-      "status": "in_progress",
+      "status": "done",
       "priority": "major",
       "type": "chore",
       "phase": 1,
       "dependencies": [],
       "source": "review:PR#6:H001,H002",
       "createdAt": "2026-06-07T09:00:00Z",
-      "assignee": "wejsa-u@hoji-20260607T094949Z",
-      "assignedAt": "2026-06-07T10:19:20Z",
-      "lockTTL": 7200,
-      "lockedFiles": [
-        "src/main/kotlin/com/hoji/config/properties/CorsProperties.kt",
-        "src/main/kotlin/com/hoji/config/properties/JwtProperties.kt",
-        "src/main/kotlin/com/hoji/config/PropertiesProfileValidator.kt",
-        "src/test/kotlin/com/hoji/config/properties/CorsPropertiesTest.kt",
-        "src/test/kotlin/com/hoji/config/properties/JwtPropertiesTest.kt",
-        "src/test/kotlin/com/hoji/config/PropertiesProfileValidatorTest.kt"
-      ],
       "currentStep": 1,
       "steps": [
         {
@@ -213,17 +202,14 @@
             "src/test/kotlin/com/hoji/config/properties/JwtPropertiesTest.kt",
             "src/test/kotlin/com/hoji/config/PropertiesProfileValidatorTest.kt"
           ],
-          "status": "pr_created",
+          "status": "merged",
           "lineLimit": 600,
-          "prNumber": 9
+          "prNumber": 9,
+          "mergedAt": "2026-06-07T10:24:45Z"
         }
       ],
-      "workflowState": {
-        "lastReviewDecision": "COMMENT",
-        "currentSkill": "crew-review-pr",
-        "fixLoopCount": 0,
-        "prNumber": 9
-      }
+      "workflowState": null,
+      "completedAt": "2026-06-07T10:24:45Z"
     },
     "TASK-006": {
       "id": "TASK-006",
