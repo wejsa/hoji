@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 1,
     "projectPrefix": "TASK",
-    "version": 9,
+    "version": 10,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T00:00:00Z"
   },
@@ -31,7 +31,7 @@
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
       "assignee": "wejsa-u@hoji-20260607-132249",
-      "assignedAt": "2026-06-07T14:50:00Z",
+      "assignedAt": "2026-06-07T15:10:00Z",
       "lockTTL": 10800,
       "lockedFiles": [
         "build.gradle.kts",
@@ -65,8 +65,9 @@
           "step": 2,
           "title": "JWT Provider + Security 설정",
           "prLineLimit": 700,
-          "status": "pr_created",
-          "prNumber": 4
+          "status": "merged",
+          "prNumber": 4,
+          "mergedAt": "2026-06-07T15:10:00Z"
         },
         {
           "step": 3,
@@ -87,11 +88,11 @@
           "status": "todo"
         }
       ],
-      "currentStep": 2,
+      "currentStep": 3,
       "createdAt": "2026-06-07T00:00:00Z",
       "workflowState": {
-        "currentSkill": "crew-review-pr",
-        "lastReviewDecision": "COMMENT",
+        "currentSkill": "crew-impl",
+        "lastReviewDecision": null,
         "fixLoopCount": 0
       }
     }
