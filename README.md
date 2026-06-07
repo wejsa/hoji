@@ -76,8 +76,8 @@ Spring Security + JWT 기반의 무상태 인증/인가 시스템. 실무 수준
 - ✅ 요청/응답 로깅 인터셉터 (상세 로깅)
 - ✅ 헤더 컨텍스트 관리 (ThreadLocal 기반)
 - ✅ QueryDSL 설정
-- ✅ Redis 설정 (선택적)
-- ✅ RabbitMQ 설정 (선택적)
+- ✅ Caffeine 로컬 캐시 설정 (분산 캐시 Redis 미사용 — 목표 스택)
+- ✅ Spring ApplicationEvent 기반 인스턴스 내 이벤트 (메시지 브로커 미사용)
 - ✅ WebClient 및 RestTemplate 설정
 - ✅ Logback 설정 (파일 로깅, 로테이션)
 - ✅ 예제 도메인 (User CRUD API)
@@ -406,7 +406,7 @@ jwtstarter:
 - 표준 HealthIndicator 인터페이스 구현
 - Kubernetes liveness/readiness 프로브 지원
 - 커스텀 헬스 체크 로직 확장 가능
-- DB, Redis 등 자동 헬스 체크 통합
+- DB 등 Spring Boot 기본 헬스 체크 통합
 
 ### 3. 공통 응답 구조
 모든 API는 일관된 응답 구조를 사용합니다:
