@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 1,
     "projectPrefix": "TASK",
-    "version": 2,
+    "version": 3,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T00:00:00Z"
   },
@@ -31,7 +31,7 @@
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
       "assignee": "wejsa-u@hoji-20260607-132249",
-      "assignedAt": "2026-06-07T13:22:49Z",
+      "assignedAt": "2026-06-07T13:48:20Z",
       "lockTTL": 1800,
       "lockedFiles": [],
       "steps": [],
