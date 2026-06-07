@@ -7,6 +7,10 @@ spring:
   application:
     name: hoji
 
+  # Graceful Shutdown 설정
+  lifecycle:
+    timeout-per-shutdown-phase: 30s  # 종료 대기 시간
+
   # Redis와 RabbitMQ 자동 설정 제외
   autoconfigure:
     exclude:
@@ -77,12 +81,14 @@ springdoc:
     operations-sorter: alpha
   show-actuator: true
 
+# JWT 인증 설정
+jwt:
+  # 운영 환경에서는 반드시 환경변수 JWT_SECRET로 256비트 이상의 시크릿을 주입할 것
+  secret: ${JWT_SECRET:hoji-local-development-secret-key-please-change-in-production-0123456789}
+  access-token-validity-ms: 1800000      # 30분
+  refresh-token-validity-ms: 1209600000  # 14일
+
 # Server
 server:
   port: 8080
   shutdown: graceful  # 우아한 종료
-
-# Graceful Shutdown 설정
-spring:
-  lifecycle:
-    timeout-per-shutdown-phase: 30s  # 종료 대기 시간

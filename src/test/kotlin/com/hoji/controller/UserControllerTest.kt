@@ -1,6 +1,10 @@
 package com.hoji.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.hoji.common.context.RequestContextInterceptor
+import com.hoji.common.logging.LoggingInterceptor
+import com.hoji.common.metrics.MetricsInterceptor
+import com.hoji.config.WebMvcConfig
 import com.hoji.controller.dto.CreateUserRequest
 import com.hoji.controller.dto.UpdateUserRequest
 import com.hoji.controller.dto.UserResponse
@@ -12,13 +16,31 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.LocalDateTime
 
-@WebMvcTest(UserController::class)
+@WebMvcTest(
+    controllers = [UserController::class],
+    // @WebMvcTest는 WebMvcConfigurer와 모든 HandlerInterceptor를 슬라이스에 자동 포함한다.
+    // 커스텀 인터셉터들은 LoggingProperties/CustomMetrics 등 비-웹 빈에 의존하므로
+    // 컨트롤러 단위 테스트에서는 제외한다.
+    excludeFilters = [
+        ComponentScan.Filter(
+            type = FilterType.ASSIGNABLE_TYPE,
+            classes = [
+                WebMvcConfig::class,
+                RequestContextInterceptor::class,
+                LoggingInterceptor::class,
+                MetricsInterceptor::class
+            ]
+        )
+    ]
+)
 class UserControllerTest {
 
     @Autowired
@@ -36,6 +58,7 @@ class UserControllerTest {
         val request = CreateUserRequest(
             username = "testuser",
             email = "test@example.com",
+            password = "password123",
             name = "Test User"
         )
         val response = UserResponse(
