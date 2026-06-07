@@ -2,9 +2,9 @@
   "metadata": {
     "lastTaskNumber": 7,
     "projectPrefix": "TASK",
-    "version": 43,
+    "version": 44,
     "createdAt": "2026-06-07T00:00:00Z",
-    "updatedAt": "2026-06-07T11:10:00Z"
+    "updatedAt": "2026-06-07T12:14:00Z"
   },
   "summary": {
     "total": 7,
@@ -30,8 +30,8 @@
       "phase": 1,
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
-      "assignee": "wejsa-u@hoji-20260607T102924Z",
-      "assignedAt": "2026-06-07T10:36:17Z",
+      "assignee": "wejsa-u@hoji-20260607T121400Z",
+      "assignedAt": "2026-06-07T12:14:00Z",
       "lockTTL": 10800,
       "lockedFiles": [
         "build.gradle.kts",
