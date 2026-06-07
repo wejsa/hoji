@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 27,
+    "version": 28,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -135,7 +135,7 @@
       "source": "health-check:SI-04",
       "createdAt": "2026-06-07T07:31:21Z",
       "assignee": "wejsa-u@hoji-20260607T093345Z",
-      "assignedAt": "2026-06-07T09:33:45Z",
+      "assignedAt": "2026-06-07T09:34:39Z",
       "lockTTL": 3600,
       "lockedFiles": [
         ".claude/state/backlog.json"
@@ -148,8 +148,9 @@
           "files": [
             ".claude/state/backlog.json"
           ],
-          "status": "pending",
-          "lineLimit": 100
+          "status": "pr_created",
+          "lineLimit": 100,
+          "prNumber": 8
         }
       ]
     },
