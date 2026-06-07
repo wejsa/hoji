@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 21,
+    "version": 22,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -135,9 +135,23 @@
       "source": "health-check:SI-04",
       "createdAt": "2026-06-07T07:31:21Z",
       "assignee": "wejsa-u@hoji-20260607T090606Z",
-      "assignedAt": "2026-06-07T09:06:06Z",
-      "lockTTL": 1800,
-      "lockedFiles": []
+      "assignedAt": "2026-06-07T09:12:13Z",
+      "lockTTL": 3600,
+      "lockedFiles": [
+        ".claude/state/backlog.json"
+      ],
+      "currentStep": 1,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "title": "TASK-001 step 3/4/5 status todo→pending + 스키마 재검증",
+          "files": [
+            ".claude/state/backlog.json"
+          ],
+          "status": "pending",
+          "lineLimit": 100
+        }
+      ]
     },
     "TASK-004": {
       "id": "TASK-004",
