@@ -8,6 +8,25 @@
       "stepNumber": 1,
       "prNumber": 5,
       "skill": "crew-impl"
+    },
+    {
+      "timestamp": "2026-06-07T08:20:00Z",
+      "action": "approved",
+      "decision": "COMMENT",
+      "taskId": "TASK-002",
+      "stepNumber": 1,
+      "prNumber": 5,
+      "skill": "crew-review-pr",
+      "tier": "T2",
+      "agents": [
+        "architecture",
+        "security"
+      ],
+      "posted": {
+        "critical": 0,
+        "major": 0,
+        "minor": 1
+      }
     }
   ]
 }
