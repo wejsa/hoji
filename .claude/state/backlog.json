@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 31,
+    "version": 32,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -190,9 +190,33 @@
       "source": "review:PR#6:H001,H002",
       "createdAt": "2026-06-07T09:00:00Z",
       "assignee": "wejsa-u@hoji-20260607T094949Z",
-      "assignedAt": "2026-06-07T09:49:49Z",
-      "lockTTL": 1800,
-      "lockedFiles": []
+      "assignedAt": "2026-06-07T10:14:37Z",
+      "lockTTL": 7200,
+      "lockedFiles": [
+        "src/main/kotlin/com/hoji/config/properties/CorsProperties.kt",
+        "src/main/kotlin/com/hoji/config/properties/JwtProperties.kt",
+        "src/main/kotlin/com/hoji/config/PropertiesProfileValidator.kt",
+        "src/test/kotlin/com/hoji/config/properties/CorsPropertiesTest.kt",
+        "src/test/kotlin/com/hoji/config/properties/JwtPropertiesTest.kt",
+        "src/test/kotlin/com/hoji/config/PropertiesProfileValidatorTest.kt"
+      ],
+      "currentStep": 1,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "title": "prod 검증 Environment 이관 + 단위 테스트",
+          "files": [
+            "src/main/kotlin/com/hoji/config/properties/CorsProperties.kt",
+            "src/main/kotlin/com/hoji/config/properties/JwtProperties.kt",
+            "src/main/kotlin/com/hoji/config/PropertiesProfileValidator.kt",
+            "src/test/kotlin/com/hoji/config/properties/CorsPropertiesTest.kt",
+            "src/test/kotlin/com/hoji/config/properties/JwtPropertiesTest.kt",
+            "src/test/kotlin/com/hoji/config/PropertiesProfileValidatorTest.kt"
+          ],
+          "status": "pending",
+          "lineLimit": 600
+        }
+      ]
     },
     "TASK-006": {
       "id": "TASK-006",
