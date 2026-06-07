@@ -9,11 +9,11 @@ import com.hoji.controller.dto.SignupRequest
 import com.hoji.domain.RefreshToken
 import com.hoji.domain.Role
 import com.hoji.domain.User
+import com.hoji.domain.UserStatus
 import com.hoji.repository.RefreshTokenRepository
 import com.hoji.repository.UserRepository
 import com.hoji.security.JwtTokenProvider
 import io.mockk.every
-import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
@@ -147,9 +147,8 @@ class AuthServiceTest {
     fun `refresh는 유효한 refresh 토큰으로 회전 발급한다(기존 폐기 후 신규 저장)`() {
         val rt = "valid-refresh-token"
         every { jwtTokenProvider.isRefreshToken(rt) } returns true
-        every { refreshTokenRepository.findByToken(any()) } returns
-            RefreshToken(id = 1L, userId = 7L, token = "old-hash", expiresAt = LocalDateTime.now().plusDays(1))
-        justRun { refreshTokenRepository.deleteByToken(any()) }
+        // 회전: 단일 DELETE가 1건 삭제 → 존재·소유 검증 통과
+        every { refreshTokenRepository.deleteByToken(any()) } returns 1
         every { jwtTokenProvider.getUsername(rt) } returns "alice"
         every { userRepository.findByUsername("alice") } returns alice()
         every { jwtTokenProvider.createAccessToken(7L, "alice", Role.USER) } returns "new-access"
@@ -166,6 +165,26 @@ class AuthServiceTest {
     }
 
     @Test
+    fun `refresh는 비활성 계정이면 Unauthorized(RT는 폐기된 상태)`() {
+        // H001: refresh 경로는 AuthenticationManager를 거치지 않으므로 계정 상태를 직접 차단해야 한다.
+        val rt = "valid-but-inactive"
+        every { jwtTokenProvider.isRefreshToken(rt) } returns true
+        every { refreshTokenRepository.deleteByToken(any()) } returns 1
+        every { jwtTokenProvider.getUsername(rt) } returns "alice"
+        every { userRepository.findByUsername("alice") } returns User(
+            id = 7L, username = "alice", email = "alice@example.com",
+            password = "hashed", name = "Alice", role = Role.USER, status = UserStatus.INACTIVE
+        )
+
+        assertThatThrownBy { authService.refresh(RefreshRequest(rt)) }
+            .isInstanceOf(UnauthorizedException::class.java)
+        // 회전으로 RT는 이미 폐기, 재발급은 막힘
+        verify(exactly = 1) { refreshTokenRepository.deleteByToken(any()) }
+        verify(exactly = 0) { jwtTokenProvider.createAccessToken(any(), any(), any()) }
+        verify(exactly = 0) { refreshTokenRepository.save(any()) }
+    }
+
+    @Test
     fun `refresh는 refresh 타입이 아닌(위조·만료·access) 토큰이면 Unauthorized`() {
         every { jwtTokenProvider.isRefreshToken("not-a-refresh") } returns false
 
@@ -179,17 +198,19 @@ class AuthServiceTest {
     fun `refresh는 폐기된(저장 안 된) 토큰이면 Unauthorized — 로그아웃·재사용 차단`() {
         val rt = "rotated-or-logged-out"
         every { jwtTokenProvider.isRefreshToken(rt) } returns true
-        every { refreshTokenRepository.findByToken(any()) } returns null
+        // 삭제 0건 = 미저장/이미폐기/동시회전 패자 → 거부
+        every { refreshTokenRepository.deleteByToken(any()) } returns 0
 
         assertThatThrownBy { authService.refresh(RefreshRequest(rt)) }
             .isInstanceOf(UnauthorizedException::class.java)
+        verify(exactly = 0) { userRepository.findByUsername(any()) }
         verify(exactly = 0) { jwtTokenProvider.createAccessToken(any(), any(), any()) }
     }
 
     @Test
     fun `logout은 보유 refresh 토큰을 해시로 폐기한다`() {
         val hash = slot<String>()
-        justRun { refreshTokenRepository.deleteByToken(capture(hash)) }
+        every { refreshTokenRepository.deleteByToken(capture(hash)) } returns 1
 
         authService.logout(RefreshRequest("some-refresh-token"))
 

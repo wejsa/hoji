@@ -12,6 +12,7 @@ import com.hoji.controller.dto.TokenResponse
 import com.hoji.domain.RefreshToken
 import com.hoji.domain.Role
 import com.hoji.domain.User
+import com.hoji.domain.UserStatus
 import com.hoji.repository.RefreshTokenRepository
 import com.hoji.repository.UserRepository
 import com.hoji.security.JwtTokenProvider
@@ -102,15 +103,19 @@ class AuthService(
         if (!jwtTokenProvider.isRefreshToken(token)) {
             throw UnauthorizedException("Invalid refresh token")
         }
-        val hashed = hashToken(token)
-        val stored = refreshTokenRepository.findByToken(hashed)
-            ?: throw UnauthorizedException("Invalid refresh token")
 
-        // 회전: 재사용/로그아웃 차단을 위해 기존 RT를 먼저 폐기한다.
-        refreshTokenRepository.deleteByToken(hashed)
+        // 회전 + 존재검증을 단일 DELETE로 처리한다. 삭제 0건이면 미저장/이미폐기/동시회전 패자 → 거부.
+        if (refreshTokenRepository.deleteByToken(hashToken(token)) == 0) {
+            throw UnauthorizedException("Invalid refresh token")
+        }
 
         val user = userRepository.findByUsername(jwtTokenProvider.getUsername(token))
             ?: throw UnauthorizedException("Invalid refresh token")
+        // 비활성/삭제 계정은 재발급을 거부한다(로그인의 비활성 차단과 동일 정책). RT는 이미 폐기됨.
+        if (user.status != UserStatus.ACTIVE) {
+            logger.info { "Refresh denied for non-active account: ${user.username}" }
+            throw UnauthorizedException("Invalid refresh token")
+        }
 
         logger.info { "Token refreshed: ${user.username}" }
         return issueTokens(user)
@@ -138,7 +143,7 @@ class AuthService(
     /** Access/Refresh를 발급하고 Refresh의 SHA-256 해시를 영속화한다. */
     private fun issueTokens(user: User): TokenResponse {
         val accessToken = jwtTokenProvider.createAccessToken(user.id!!, user.username, user.role)
-        val refreshToken = jwtTokenProvider.createRefreshToken(user.id!!, user.username, user.role)
+        val refreshToken = jwtTokenProvider.createRefreshToken(user.id, user.username, user.role)
 
         refreshTokenRepository.save(
             RefreshToken(

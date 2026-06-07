@@ -77,14 +77,14 @@ class JwtTokenProvider(
     fun getExpiration(token: String): LocalDateTime =
         LocalDateTime.ofInstant(parseClaims(token).expiration.toInstant(), ZoneId.systemDefault())
 
-    /** Access 토큰이면 true. typ 미존재 토큰은 하위호환을 위해 access로 간주한다. */
+    /** typ 클레임이 명시적으로 access일 때만 true. typ 부재 토큰은 access로 인정하지 않는다. */
     fun isAccessToken(token: String): Boolean = tokenType(token) == TYPE_ACCESS
 
     /** 서명·만료가 유효하고 typ=refresh인 Refresh 토큰이면 true. */
     fun isRefreshToken(token: String): Boolean = validateToken(token) && tokenType(token) == TYPE_REFRESH
 
-    private fun tokenType(token: String): String =
-        (parseClaims(token)[CLAIM_TYPE] as? String) ?: TYPE_ACCESS
+    /** typ 클레임 원본(부재 시 null). 폴백 없이 명시 값만 반환해 토큰 타입 혼용을 차단한다. */
+    private fun tokenType(token: String): String? = parseClaims(token)[CLAIM_TYPE] as? String
 
     private fun parseClaims(token: String): Claims =
         Jwts.parser().verifyWith(key).build().parseSignedClaims(token).payload
