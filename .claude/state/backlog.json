@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 33,
+    "version": 34,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -217,7 +217,13 @@
           "lineLimit": 600,
           "prNumber": 9
         }
-      ]
+      ],
+      "workflowState": {
+        "lastReviewDecision": "COMMENT",
+        "currentSkill": "crew-review-pr",
+        "fixLoopCount": 0,
+        "prNumber": 9
+      }
     },
     "TASK-006": {
       "id": "TASK-006",

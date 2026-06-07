@@ -147,6 +147,15 @@
       "stepNumber": 1,
       "prNumber": 9,
       "timestamp": "2026-06-07T10:19:20Z"
+    },
+    {
+      "action": "reviewed",
+      "decision": "COMMENT",
+      "taskId": "TASK-005",
+      "prNumber": 9,
+      "tier": "T3",
+      "major": 3,
+      "timestamp": "2026-06-07T10:23:55Z"
     }
   ]
 }
