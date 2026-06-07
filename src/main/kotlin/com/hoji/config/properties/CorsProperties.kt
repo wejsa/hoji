@@ -26,13 +26,22 @@ data class CorsProperties(
     var allowCredentials: Boolean = true,
     var maxAgeSeconds: Long = 3600,
 ) {
+    /** 환경(프로파일) 무관 불변식. 바인딩 직후 fail-fast. */
     @PostConstruct
     fun validate() {
         require(!(allowCredentials && hasWildcardOrigin())) {
             "hoji.cors: allowCredentials=true와 allowedOrigins '$WILDCARD'는 동시 사용 불가. " +
                 "허용 오리진을 명시하세요."
         }
-        val isProd = System.getenv("SPRING_PROFILES_ACTIVE")?.contains("prod") == true
+    }
+
+    /**
+     * prod 프로파일 의존 검증. prod에서 와일드카드 오리진을 차단한다.
+     *
+     * prod 판정은 [com.hoji.config.PropertiesProfileValidator]가 Spring [org.springframework.core.env.Environment]
+     * 기반으로 산출해 주입한다(과거 `System.getenv`만 보던 우회 경로 차단). `isProd`를 순수 입력으로 받아 단위 테스트 가능하다.
+     */
+    fun validateForProfile(isProd: Boolean) {
         require(!(isProd && hasWildcardOrigin())) {
             "Production CORS에 와일드카드 오리진('$WILDCARD')은 사용할 수 없습니다. 허용 도메인을 명시하세요."
         }
