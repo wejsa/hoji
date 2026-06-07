@@ -1,0 +1,42 @@
+{
+  "name": "hoji",
+  "description": "Kotlin + Spring Boot 기반 백엔드 서비스. 메시지큐 대신 Spring Application Event 기반 이벤트 처리, 로컬 캐시(Caffeine), Docker 기반 배포를 지향한다.",
+  "version": "0.0.1-SNAPSHOT",
+  "kitVersion": "4.0.0",
+  "kitSource": "https://github.com/wejsa/ai-crew-kit",
+  "createdAt": "2026-06-07T00:00:00Z",
+  "metadata": {
+    "version": 1,
+    "createdAt": "2026-06-07T00:00:00Z",
+    "updatedAt": "2026-06-07T00:00:00Z"
+  },
+  "hooks": {},
+  "tokenHints": {},
+  "techStack": {
+    "backend": "spring-boot-kotlin",
+    "frontend": "none",
+    "database": "h2",
+    "cache": "caffeine",
+    "messageQueue": "none",
+    "eventModel": "spring-application-event",
+    "infrastructure": "docker-compose"
+  },
+  "buildCommands": {
+    "build": "./gradlew build",
+    "test": "./gradlew test",
+    "lint": ""
+  },
+  "agents": {
+    "enabled": ["pm", "backend", "code-reviewer", "qa", "db-designer", "planner", "docs"],
+    "disabled": ["frontend"]
+  },
+  "conventions": {
+    "taskPrefix": "TASK",
+    "branchStrategy": "git-flow",
+    "commitFormat": "conventional",
+    "prLineLimit": 500,
+    "testCoverage": 80,
+    "workflowProfile": "standard",
+    "skillProfile": "default"
+  }
+}
