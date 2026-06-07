@@ -2,9 +2,9 @@
   "metadata": {
     "lastTaskNumber": 7,
     "projectPrefix": "TASK",
-    "version": 48,
+    "version": 50,
     "createdAt": "2026-06-07T00:00:00Z",
-    "updatedAt": "2026-06-07T13:00:00Z"
+    "updatedAt": "2026-06-07T13:20:00Z"
   },
   "summary": {
     "total": 7,
@@ -31,7 +31,7 @@
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
       "assignee": "wejsa-u@hoji-20260607T121400Z",
-      "assignedAt": "2026-06-07T13:00:00Z",
+      "assignedAt": "2026-06-07T13:10:00Z",
       "lockTTL": 10800,
       "lockedFiles": [
         "build.gradle.kts",
@@ -93,8 +93,9 @@
           "step": 5,
           "title": "기존 API 접근 제어 + e2e 통합 테스트",
           "prLineLimit": 500,
-          "status": "pending",
-          "stepNumber": 5
+          "status": "pr_created",
+          "stepNumber": 5,
+          "prNumber": 13
         }
       ],
       "currentStep": 5,
@@ -277,5 +278,10 @@
       "completedAt": "2026-06-07T11:10:00Z"
     }
   },
-  "workflowState": null
+  "workflowState": {
+    "currentSkill": "crew-review-pr",
+    "lastReviewDecision": "COMMENT",
+    "fixLoopCount": 0,
+    "prNumber": 13
+  }
 }
