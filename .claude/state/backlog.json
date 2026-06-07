@@ -2,16 +2,16 @@
   "metadata": {
     "lastTaskNumber": 1,
     "projectPrefix": "TASK",
-    "version": 1,
+    "version": 2,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T00:00:00Z"
   },
   "summary": {
     "total": 1,
     "done": 0,
-    "inProgress": 0,
+    "inProgress": 1,
     "review": 0,
-    "todo": 1
+    "todo": 0
   },
   "phases": {
     "1": {
@@ -25,11 +25,15 @@
       "id": "TASK-001",
       "title": "인증/인가 시스템 (Spring Security + JWT)",
       "description": "Spring Security + JWT 기반 회원가입·로그인·토큰 재발급·로그아웃 API 및 Role 기반 인가(RBAC) 구현. User에 password(BCrypt)·role 필드 추가.",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "phase": 1,
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
+      "assignee": "wejsa-u@hoji-20260607-132249",
+      "assignedAt": "2026-06-07T13:22:49Z",
+      "lockTTL": 1800,
+      "lockedFiles": [],
       "steps": [],
       "currentStep": 0,
       "createdAt": "2026-06-07T00:00:00Z"
