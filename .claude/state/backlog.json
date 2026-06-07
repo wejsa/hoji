@@ -2,7 +2,7 @@
   "metadata": {
     "lastTaskNumber": 5,
     "projectPrefix": "TASK",
-    "version": 37,
+    "version": 38,
     "createdAt": "2026-06-07T00:00:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -31,7 +31,7 @@
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
       "assignee": "wejsa-u@hoji-20260607T102924Z",
-      "assignedAt": "2026-06-07T10:29:24Z",
+      "assignedAt": "2026-06-07T10:36:17Z",
       "lockTTL": 10800,
       "lockedFiles": [
         "build.gradle.kts",
@@ -75,8 +75,9 @@
           "step": 3,
           "title": "회원가입/로그인 API",
           "prLineLimit": 800,
-          "status": "pending",
-          "stepNumber": 3
+          "status": "pr_created",
+          "stepNumber": 3,
+          "prNumber": 10
         },
         {
           "step": 4,

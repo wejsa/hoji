@@ -168,6 +168,13 @@
       "action": "task_completed",
       "taskId": "TASK-005",
       "timestamp": "2026-06-07T10:24:45Z"
+    },
+    {
+      "action": "pr_created",
+      "taskId": "TASK-001",
+      "stepNumber": 3,
+      "prNumber": 10,
+      "timestamp": "2026-06-07T10:36:17Z"
     }
   ]
 }
