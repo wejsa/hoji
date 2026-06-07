@@ -185,6 +185,14 @@
       "tier": "T3",
       "major": 5,
       "timestamp": "2026-06-07T10:41:03Z"
+    },
+    {
+      "timestamp": "2026-06-07T10:55:00Z",
+      "action": "pr_created",
+      "taskId": "TASK-007",
+      "stepNumber": 1,
+      "prNumber": 11,
+      "skill": "crew-impl"
     }
   ]
 }
