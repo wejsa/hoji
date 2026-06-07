@@ -11,11 +11,11 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: 30s  # 종료 대기 시간
 
-  # Redis와 RabbitMQ 자동 설정 제외
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
-      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+  # Cache - 로컬 캐시 (Caffeine)
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=10000,expireAfterWrite=10m
 
   # H2 Database (공통)
   datasource:
@@ -31,35 +31,6 @@ spring:
       hibernate:
         use_sql_comments: true
     open-in-view: false
-
-  # Redis (선택적 - 사용 시 환경별 override 가능)
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      timeout: 3000ms
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 8
-          min-idle: 0
-
-  # RabbitMQ (선택적 - 사용 시 환경별 override 가능)
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    virtual-host: /
-    connection-timeout: 10000
-    listener:
-      simple:
-        acknowledge-mode: auto
-        prefetch: 1
-        retry:
-          enabled: true
-          initial-interval: 3000
-          max-attempts: 3
 
 # Actuator (공통)
 management:
