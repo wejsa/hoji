@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hoji-api
+  name: spring-boot-jwt-starter-api
   labels:
-    app: hoji
+    app: spring-boot-jwt-starter
 spec:
   replicas: 3  # 3개 인스턴스
   selector:
     matchLabels:
-      app: hoji
+      app: spring-boot-jwt-starter
   template:
     metadata:
       labels:
-        app: hoji
+        app: spring-boot-jwt-starter
       annotations:
         # Prometheus가 이 Pod에서 메트릭을 수집하도록 설정
         prometheus.io/scrape: "true"
@@ -20,8 +20,8 @@ spec:
         prometheus.io/path: "/actuator/prometheus"
     spec:
       containers:
-      - name: hoji-api
-        image: hoji/api:latest
+      - name: spring-boot-jwt-starter-api
+        image: spring-boot-jwt-starter/api:latest
         ports:
         - containerPort: 8080
           name: http
@@ -61,9 +61,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hoji-api
+  name: spring-boot-jwt-starter-api
   labels:
-    app: hoji
+    app: spring-boot-jwt-starter
 spec:
   type: ClusterIP
   ports:
@@ -72,4 +72,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: hoji
+    app: spring-boot-jwt-starter

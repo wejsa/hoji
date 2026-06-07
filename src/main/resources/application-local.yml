@@ -29,12 +29,12 @@ management:
 logging:
   level:
     root: INFO
-    com.hoji: DEBUG
+    com.jwtstarter: DEBUG
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
-hoji:
+jwtstarter:
   logging:
     sensitive-headers:
       - authorization

@@ -16,9 +16,9 @@ spring:
 logging:
   level:
     root: INFO
-    com.hoji: DEBUG
+    com.jwtstarter: DEBUG
 
-hoji:
+jwtstarter:
   logging:
     sensitive-headers:
       - authorization

@@ -1,5 +1,5 @@
 {
-  "name": "hoji",
+  "name": "spring-boot-jwt-starter",
   "description": "Kotlin + Spring Boot 기반 백엔드 서비스. 메시지큐 대신 Spring Application Event 기반 이벤트 처리, 로컬 캐시(Caffeine), Docker 기반 배포를 지향한다.",
   "version": "0.0.1-SNAPSHOT",
   "kitVersion": "4.0.0",

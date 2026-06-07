@@ -190,12 +190,12 @@
           "stepNumber": 1,
           "title": "prod 검증 Environment 이관 + 단위 테스트",
           "files": [
-            "src/main/kotlin/com/hoji/config/properties/CorsProperties.kt",
-            "src/main/kotlin/com/hoji/config/properties/JwtProperties.kt",
-            "src/main/kotlin/com/hoji/config/PropertiesProfileValidator.kt",
-            "src/test/kotlin/com/hoji/config/properties/CorsPropertiesTest.kt",
-            "src/test/kotlin/com/hoji/config/properties/JwtPropertiesTest.kt",
-            "src/test/kotlin/com/hoji/config/PropertiesProfileValidatorTest.kt"
+            "src/main/kotlin/com/jwtstarter/config/properties/CorsProperties.kt",
+            "src/main/kotlin/com/jwtstarter/config/properties/JwtProperties.kt",
+            "src/main/kotlin/com/jwtstarter/config/PropertiesProfileValidator.kt",
+            "src/test/kotlin/com/jwtstarter/config/properties/CorsPropertiesTest.kt",
+            "src/test/kotlin/com/jwtstarter/config/properties/JwtPropertiesTest.kt",
+            "src/test/kotlin/com/jwtstarter/config/PropertiesProfileValidatorTest.kt"
           ],
           "status": "merged",
           "lineLimit": 600,

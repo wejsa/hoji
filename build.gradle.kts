@@ -9,7 +9,7 @@ plugins {
     kotlin("kapt") version "1.9.20"
 }
 
-group = "com.hoji"
+group = "com.jwtstarter"
 version = "0.0.1-SNAPSHOT"
 
 java {

@@ -1,4 +1,4 @@
-# Hoji — Spring Boot + Kotlin 백엔드 보일러플레이트 (JWT 인증/인가 내장)
+# spring-boot-jwt-starter — Spring Boot + Kotlin 백엔드 보일러플레이트 (JWT 인증/인가 내장)
 
 Kotlin + Spring Boot 기반의 운영지향 백엔드 베이스 프로젝트입니다.
 **Spring Security + JWT 기반 인증/인가(회원가입·로그인·토큰 회전·RBAC)** 를 대표 기능으로 제공하며,
@@ -96,8 +96,8 @@ Spring Security + JWT 기반의 무상태 인증/인가 시스템. 실무 수준
 ## 프로젝트 구조
 
 ```
-src/main/kotlin/com/hoji/
-├── HojiApplication.kt              # 애플리케이션 진입점
+src/main/kotlin/com/jwtstarter/
+├── JwtStarterApplication.kt              # 애플리케이션 진입점
 ├── common/                         # 공통 모듈
 │   ├── dto/                       # 공통 DTO
 │   │   ├── ApiResponse.kt         # API 응답 구조
@@ -204,9 +204,9 @@ src/main/kotlin/com/hoji/
 ./gradlew build
 
 # 환경별 실행
-java -jar build/libs/hoji-0.0.1-SNAPSHOT.jar --spring.profiles.active=local
-java -jar build/libs/hoji-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
-java -jar build/libs/hoji-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+java -jar build/libs/spring-boot-jwt-starter-0.0.1-SNAPSHOT.jar --spring.profiles.active=local
+java -jar build/libs/spring-boot-jwt-starter-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
+java -jar build/libs/spring-boot-jwt-starter-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 ```
 
 ## API 문서
@@ -233,7 +233,7 @@ GET /actuator/health/readiness    # Kubernetes Readiness Probe
     "custom": {
       "status": "UP",
       "details": {
-        "application": "hoji",
+        "application": "spring-boot-jwt-starter",
         "status": "healthy",
         "timestamp": "2024-01-01T00:00:00"
       }
@@ -316,7 +316,7 @@ H2 콘솔 접근 (환경별로 다름):
 
 **Local/Dev 환경**:
 - URL: http://localhost:8080/h2-console
-- JDBC URL: `jdbc:h2:mem:hoji`
+- JDBC URL: `jdbc:h2:mem:jwtstarter`
 - Username: `sa`
 - Password: (비어있음)
 
@@ -371,8 +371,8 @@ H2 콘솔 접근 (환경별로 다름):
 ## 로깅
 
 ### 로그 파일
-- 일반 로그: `logs/hoji.log` (또는 환경별 `logs/hoji-{profile}.log`)
-- 에러 로그: `logs/hoji-error.log`
+- 일반 로그: `logs/spring-boot-jwt-starter.log` (또는 환경별 `logs/spring-boot-jwt-starter-{profile}.log`)
+- 에러 로그: `logs/spring-boot-jwt-starter-error.log`
 - 로테이션: 10MB 단위로 파일 분할
 - 보관 기간: 최대 30일
 
@@ -384,7 +384,7 @@ H2 콘솔 접근 (환경별로 다름):
 ### 민감정보 마스킹
 `application.yml`에서 설정 가능:
 ```yaml
-hoji:
+jwtstarter:
   logging:
     sensitive-headers:
       - authorization
@@ -477,13 +477,13 @@ hoji:
 #### Prometheus 쿼리 예시
 ```promql
 # 전체 인스턴스 합산
-sum(api_calls_total{application="hoji"})
+sum(api_calls_total{application="spring-boot-jwt-starter"})
 
 # 인스턴스별 조회
-api_calls_total{application="hoji",instance=~".*"}
+api_calls_total{application="spring-boot-jwt-starter",instance=~".*"}
 
 # 특정 인스턴스만
-api_calls_total{application="hoji",instance="hoji-api-0"}
+api_calls_total{application="spring-boot-jwt-starter",instance="spring-boot-jwt-starter-api-0"}
 
 # 평균 응답 시간
 rate(api_processing_time_sum[5m]) / rate(api_processing_time_count[5m])

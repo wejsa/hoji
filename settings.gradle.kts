@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "hoji"
+rootProject.name = "spring-boot-jwt-starter"
