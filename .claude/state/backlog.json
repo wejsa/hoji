@@ -2,9 +2,9 @@
   "metadata": {
     "lastTaskNumber": 4,
     "projectPrefix": "TASK",
-    "version": 17,
+    "version": 18,
     "createdAt": "2026-06-07T00:00:00Z",
-    "updatedAt": "2026-06-07T08:45:00Z"
+    "updatedAt": "2026-06-07T08:55:00Z"
   },
   "summary": {
     "total": 4,
@@ -169,8 +169,8 @@
       ],
       "currentStep": 1,
       "workflowState": {
-        "currentSkill": "crew-impl",
-        "lastReviewDecision": null,
+        "currentSkill": "crew-review-pr",
+        "lastReviewDecision": "COMMENT",
         "fixLoopCount": 0
       }
     }
