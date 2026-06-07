@@ -93,6 +93,14 @@
       "stepNumber": 1,
       "prNumber": 7,
       "timestamp": "2026-06-07T09:31:02Z"
+    },
+    {
+      "action": "reviewed",
+      "decision": "COMMENT",
+      "taskId": "TASK-006",
+      "prNumber": 7,
+      "tier": "T0",
+      "timestamp": "2026-06-07T09:31:57Z"
     }
   ]
 }
