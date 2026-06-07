@@ -193,6 +193,22 @@
       "stepNumber": 1,
       "prNumber": 11,
       "skill": "crew-impl"
+    },
+    {
+      "timestamp": "2026-06-07T11:05:00Z",
+      "action": "approved",
+      "decision": "COMMENT",
+      "taskId": "TASK-007",
+      "stepNumber": 1,
+      "prNumber": 11,
+      "skill": "crew-review-pr",
+      "tier": "T2",
+      "posted": {
+        "critical": 0,
+        "major": 0,
+        "minor": 0
+      },
+      "dropped": 1
     }
   ]
 }
