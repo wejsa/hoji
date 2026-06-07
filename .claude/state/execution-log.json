@@ -128,6 +128,18 @@
       "prNumber": 8,
       "tier": "T0",
       "timestamp": "2026-06-07T09:35:09Z"
+    },
+    {
+      "action": "merged",
+      "taskId": "TASK-003",
+      "stepNumber": 1,
+      "prNumber": 8,
+      "timestamp": "2026-06-07T09:36:01Z"
+    },
+    {
+      "action": "task_completed",
+      "taskId": "TASK-003",
+      "timestamp": "2026-06-07T09:36:01Z"
     }
   ]
 }

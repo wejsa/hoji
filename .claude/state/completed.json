@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": 3,
+    "version": 4,
     "createdAt": "2026-06-07T08:25:00Z",
     "updatedAt": "2026-06-07T09:05:00Z"
   },
@@ -68,6 +68,16 @@
       "completedAt": "2026-06-07T09:33:14Z",
       "prNumber": 7,
       "source": "crew-impl:TASK-003 build-gate"
+    },
+    "TASK-003": {
+      "id": "TASK-003",
+      "title": "backlog step.status enum 위반 정정 (todo → pending)",
+      "type": "chore",
+      "priority": "major",
+      "phase": 1,
+      "completedAt": "2026-06-07T09:36:01Z",
+      "prNumber": 8,
+      "source": "health-check:SI-04"
     }
   }
 }
