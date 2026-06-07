@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User as SpringUser
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.Date
 import javax.crypto.SecretKey
 
@@ -29,17 +31,18 @@ class JwtTokenProvider(
     private val refreshTokenValidityMs: Long = jwtProperties.refreshTokenValidityMs
 
     fun createAccessToken(userId: Long, username: String, role: Role): String =
-        buildToken(userId, username, role, accessTokenValidityMs)
+        buildToken(userId, username, role, accessTokenValidityMs, TYPE_ACCESS)
 
     fun createRefreshToken(userId: Long, username: String, role: Role): String =
-        buildToken(userId, username, role, refreshTokenValidityMs)
+        buildToken(userId, username, role, refreshTokenValidityMs, TYPE_REFRESH)
 
-    private fun buildToken(userId: Long, username: String, role: Role, validityMs: Long): String {
+    private fun buildToken(userId: Long, username: String, role: Role, validityMs: Long, type: String): String {
         val now = Date()
         return Jwts.builder()
             .subject(username)
             .claim(CLAIM_USER_ID, userId)
             .claim(CLAIM_ROLE, role.name)
+            .claim(CLAIM_TYPE, type)
             .issuedAt(now)
             .expiration(Date(now.time + validityMs))
             .signWith(key)
@@ -70,12 +73,28 @@ class JwtTokenProvider(
 
     fun getUsername(token: String): String = parseClaims(token).subject
 
+    /** 토큰 만료 시각. RefreshToken 영속화 시 `expires_at`으로 사용한다. */
+    fun getExpiration(token: String): LocalDateTime =
+        LocalDateTime.ofInstant(parseClaims(token).expiration.toInstant(), ZoneId.systemDefault())
+
+    /** Access 토큰이면 true. typ 미존재 토큰은 하위호환을 위해 access로 간주한다. */
+    fun isAccessToken(token: String): Boolean = tokenType(token) == TYPE_ACCESS
+
+    /** 서명·만료가 유효하고 typ=refresh인 Refresh 토큰이면 true. */
+    fun isRefreshToken(token: String): Boolean = validateToken(token) && tokenType(token) == TYPE_REFRESH
+
+    private fun tokenType(token: String): String =
+        (parseClaims(token)[CLAIM_TYPE] as? String) ?: TYPE_ACCESS
+
     private fun parseClaims(token: String): Claims =
         Jwts.parser().verifyWith(key).build().parseSignedClaims(token).payload
 
     companion object {
         private const val CLAIM_USER_ID = "uid"
         private const val CLAIM_ROLE = "role"
+        private const val CLAIM_TYPE = "typ"
+        private const val TYPE_ACCESS = "access"
+        private const val TYPE_REFRESH = "refresh"
         private const val ROLE_PREFIX = "ROLE_"
     }
 }

@@ -1,13 +1,18 @@
 package com.hoji.service
 
 import com.hoji.common.exception.ConflictException
+import com.hoji.common.exception.NotFoundException
 import com.hoji.common.exception.UnauthorizedException
 import com.hoji.controller.dto.LoginRequest
+import com.hoji.controller.dto.MeResponse
+import com.hoji.controller.dto.RefreshRequest
 import com.hoji.controller.dto.SignupRequest
 import com.hoji.controller.dto.SignupResponse
 import com.hoji.controller.dto.TokenResponse
+import com.hoji.domain.RefreshToken
 import com.hoji.domain.Role
 import com.hoji.domain.User
+import com.hoji.repository.RefreshTokenRepository
 import com.hoji.repository.UserRepository
 import com.hoji.security.JwtTokenProvider
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -17,6 +22,7 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.security.MessageDigest
 
 private val logger = KotlinLogging.logger {}
 
@@ -30,6 +36,7 @@ private val logger = KotlinLogging.logger {}
 @Transactional(readOnly = true)
 class AuthService(
     private val userRepository: UserRepository,
+    private val refreshTokenRepository: RefreshTokenRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtTokenProvider: JwtTokenProvider,
     private val authenticationManager: AuthenticationManager
@@ -66,6 +73,7 @@ class AuthService(
      * 로그인. 자격증명 검증 성공 시 Access/Refresh 토큰을 발급한다.
      * 실패(자격증명 불일치/비활성 계정)는 정보 노출을 막기 위해 동일한 401로 응답한다.
      */
+    @Transactional
     fun login(request: LoginRequest): TokenResponse {
         try {
             authenticationManager.authenticate(
@@ -79,10 +87,71 @@ class AuthService(
         val user = userRepository.findByUsername(request.username)
             ?: throw UnauthorizedException("Invalid username or password")
 
+        logger.info { "Login success: ${user.username}" }
+        return issueTokens(user)
+    }
+
+    /**
+     * Refresh Token으로 Access/Refresh를 재발급한다(회전: 기존 RT 폐기 후 신규 발급).
+     * 서명·typ·만료가 유효하고 DB에 저장된(미폐기) 토큰일 때만 성공한다.
+     * 위조/만료/로그아웃(폐기)된 토큰은 401로 거부한다.
+     */
+    @Transactional
+    fun refresh(request: RefreshRequest): TokenResponse {
+        val token = request.refreshToken
+        if (!jwtTokenProvider.isRefreshToken(token)) {
+            throw UnauthorizedException("Invalid refresh token")
+        }
+        val hashed = hashToken(token)
+        val stored = refreshTokenRepository.findByToken(hashed)
+            ?: throw UnauthorizedException("Invalid refresh token")
+
+        // 회전: 재사용/로그아웃 차단을 위해 기존 RT를 먼저 폐기한다.
+        refreshTokenRepository.deleteByToken(hashed)
+
+        val user = userRepository.findByUsername(jwtTokenProvider.getUsername(token))
+            ?: throw UnauthorizedException("Invalid refresh token")
+
+        logger.info { "Token refreshed: ${user.username}" }
+        return issueTokens(user)
+    }
+
+    /**
+     * 로그아웃. 보유한 Refresh Token을 DB에서 폐기해 이후 재발급을 차단한다.
+     * 유효하지 않은 토큰은 멱등하게 무시한다(이미 폐기된 것과 동일 효과).
+     */
+    @Transactional
+    fun logout(request: RefreshRequest) {
+        refreshTokenRepository.deleteByToken(hashToken(request.refreshToken))
+        logger.info { "Logout processed" }
+    }
+
+    /**
+     * 현재 인증된 사용자 정보를 조회한다.
+     */
+    fun me(username: String): MeResponse {
+        val user = userRepository.findByUsername(username)
+            ?: throw NotFoundException("User not found: $username")
+        return MeResponse.from(user)
+    }
+
+    /** Access/Refresh를 발급하고 Refresh의 SHA-256 해시를 영속화한다. */
+    private fun issueTokens(user: User): TokenResponse {
         val accessToken = jwtTokenProvider.createAccessToken(user.id!!, user.username, user.role)
         val refreshToken = jwtTokenProvider.createRefreshToken(user.id!!, user.username, user.role)
-        logger.info { "Login success: ${user.username}" }
 
+        refreshTokenRepository.save(
+            RefreshToken(
+                userId = user.id,
+                token = hashToken(refreshToken),
+                expiresAt = jwtTokenProvider.getExpiration(refreshToken),
+            )
+        )
         return TokenResponse(accessToken = accessToken, refreshToken = refreshToken)
     }
+
+    /** Refresh 토큰 평문을 SHA-256 hex로 해시한다(DB에는 해시만 저장). */
+    private fun hashToken(token: String): String =
+        MessageDigest.getInstance("SHA-256").digest(token.toByteArray())
+            .joinToString("") { "%02x".format(it) }
 }
