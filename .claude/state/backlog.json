@@ -2,9 +2,9 @@
   "metadata": {
     "lastTaskNumber": 4,
     "projectPrefix": "TASK",
-    "version": 16,
+    "version": 17,
     "createdAt": "2026-06-07T00:00:00Z",
-    "updatedAt": "2026-06-07T08:35:00Z"
+    "updatedAt": "2026-06-07T08:45:00Z"
   },
   "summary": {
     "total": 4,
@@ -148,7 +148,7 @@
       "createdAt": "2026-06-07T07:31:21Z",
       "planFile": ".claude/temp/TASK-004-plan.md",
       "assignee": "wejsa-u@hoji-20260607-173500",
-      "assignedAt": "2026-06-07T08:35:00Z",
+      "assignedAt": "2026-06-07T08:45:00Z",
       "lockTTL": 7200,
       "lockedFiles": [
         "src/main/kotlin/com/hoji/config/properties/CorsProperties.kt",
@@ -163,12 +163,13 @@
           "step": 1,
           "title": "CORS 설정 외부화 + 와일드카드 제거 + fail-fast 검증",
           "prLineLimit": 300,
-          "status": "pending"
+          "status": "pr_created",
+          "prNumber": 6
         }
       ],
       "currentStep": 1,
       "workflowState": {
-        "currentSkill": "crew-plan",
+        "currentSkill": "crew-impl",
         "lastReviewDecision": null,
         "fixLoopCount": 0
       }

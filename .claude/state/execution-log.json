@@ -42,6 +42,14 @@
       "taskId": "TASK-002",
       "prNumber": 5,
       "postMergeGate": "BUILD SUCCESSFUL (DS-01/DS-02 PASS)"
+    },
+    {
+      "timestamp": "2026-06-07T08:45:00Z",
+      "action": "pr_created",
+      "taskId": "TASK-004",
+      "stepNumber": 1,
+      "prNumber": 6,
+      "skill": "crew-impl"
     }
   ]
 }
