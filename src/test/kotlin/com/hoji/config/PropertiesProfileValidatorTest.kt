@@ -62,10 +62,39 @@ class PropertiesProfileValidatorTest {
     }
 
     @Test
-    fun `prod 판정은 부분 일치와 대소문자를 무시한다`() {
+    fun `prod 판정은 prod·prod- 접두사와 대소문자를 무시한다`() {
         assertThat(PropertiesProfileValidator.isProdProfile(arrayOf("prod-eu"))).isTrue()
         assertThat(PropertiesProfileValidator.isProdProfile(arrayOf("PROD"))).isTrue()
         assertThat(PropertiesProfileValidator.isProdProfile(arrayOf("dev", "local"))).isFalse()
         assertThat(PropertiesProfileValidator.isProdProfile(emptyArray())).isFalse()
+    }
+
+    @Test
+    fun `다원소 프로파일 배열에 prod가 섞여 있으면 prod로 판정한다`() {
+        // H002: any{} 가 다원소 배열을 끝까지 순회해 prod를 찾는지 고정
+        assertThat(PropertiesProfileValidator.isProdProfile(arrayOf("dev", "prod"))).isTrue()
+        assertThat(PropertiesProfileValidator.isProdProfile(arrayOf("monitoring", "prod-eu", "k8s"))).isTrue()
+        assertThat(PropertiesProfileValidator.isProdProfile(arrayOf("dev", "local", "test"))).isFalse()
+    }
+
+    @Test
+    fun `prod 부분일치(non-prod·production)는 prod가 아니다`() {
+        // M001: 느슨한 contains("prod") 오탐 차단
+        assertThat(PropertiesProfileValidator.isProdProfile(arrayOf("non-prod"))).isFalse()
+        assertThat(PropertiesProfileValidator.isProdProfile(arrayOf("production"))).isFalse()
+        assertThat(PropertiesProfileValidator.isProdProfile(arrayOf("reproduction"))).isFalse()
+    }
+
+    @Test
+    fun `다원소 프로파일에 prod가 섞이면 prod 가드가 발동한다`() {
+        val validator = PropertiesProfileValidator(
+            MockEnvironment().apply { setActiveProfiles("dev", "prod") },
+            CorsProperties(allowedOrigins = listOf("*"), allowCredentials = false),
+            JwtProperties(secret = strongSecret),
+        )
+
+        assertThatThrownBy { validator.afterPropertiesSet() }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessageContaining("Production CORS")
     }
 }
