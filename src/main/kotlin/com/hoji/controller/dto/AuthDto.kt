@@ -48,6 +48,35 @@ data class TokenResponse(
 )
 
 /**
+ * Refresh Token 요청 DTO (재발급/로그아웃 공용)
+ */
+data class RefreshRequest(
+    @field:NotBlank(message = "Refresh token is required")
+    val refreshToken: String
+)
+
+/**
+ * 현재 사용자 조회 응답 DTO. 비밀번호 등 민감 필드는 노출하지 않는다.
+ */
+data class MeResponse(
+    val id: Long,
+    val username: String,
+    val email: String,
+    val name: String,
+    val role: Role
+) {
+    companion object {
+        fun from(user: User): MeResponse = MeResponse(
+            id = user.id!!,
+            username = user.username,
+            email = user.email,
+            name = user.name,
+            role = user.role
+        )
+    }
+}
+
+/**
  * 회원가입 응답 DTO. 비밀번호 등 민감 필드는 노출하지 않는다.
  */
 data class SignupResponse(

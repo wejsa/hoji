@@ -60,4 +60,38 @@ class JwtTokenProviderTest {
         val tampered = token.dropLast(2) + "xx"
         assertThat(sut.validateToken(tampered)).isFalse()
     }
+
+    @Test
+    fun `access 토큰은 isAccessToken true, isRefreshToken false`() {
+        val sut = provider()
+        val token = sut.createAccessToken(1L, "alice", Role.USER)
+
+        assertThat(sut.isAccessToken(token)).isTrue()
+        assertThat(sut.isRefreshToken(token)).isFalse()
+    }
+
+    @Test
+    fun `refresh 토큰은 isRefreshToken true, isAccessToken false — refresh-as-access 차단`() {
+        val sut = provider()
+        val token = sut.createRefreshToken(1L, "alice", Role.USER)
+
+        assertThat(sut.isRefreshToken(token)).isTrue()
+        assertThat(sut.isAccessToken(token)).isFalse()
+    }
+
+    @Test
+    fun `만료된 refresh 토큰은 isRefreshToken false`() {
+        val sut = provider(refreshMs = -1_000)
+        val token = sut.createRefreshToken(1L, "alice", Role.USER)
+
+        assertThat(sut.isRefreshToken(token)).isFalse()
+    }
+
+    @Test
+    fun `getExpiration은 토큰 만료 시각을 반환한다`() {
+        val sut = provider()
+        val token = sut.createRefreshToken(1L, "alice", Role.USER)
+
+        assertThat(sut.getExpiration(token)).isAfter(java.time.LocalDateTime.now())
+    }
 }

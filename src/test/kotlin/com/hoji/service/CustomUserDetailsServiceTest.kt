@@ -9,6 +9,8 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
 class CustomUserDetailsServiceTest {
@@ -49,12 +51,13 @@ class CustomUserDetailsServiceTest {
             .isInstanceOf(UsernameNotFoundException::class.java)
     }
 
-    @Test
-    fun `ACTIVE가 아닌 계정은 disabled 처리된다`() {
-        every { userRepository.findByUsername("alice") } returns user(status = UserStatus.INACTIVE)
+    @ParameterizedTest
+    @CsvSource("ACTIVE,true", "INACTIVE,false", "DELETED,false")
+    fun `계정 상태에 따라 enabled가 결정된다(ACTIVE만 활성)`(status: UserStatus, expectedEnabled: Boolean) {
+        every { userRepository.findByUsername("alice") } returns user(status = status)
 
         val details = service.loadUserByUsername("alice")
 
-        assertThat(details.isEnabled).isFalse()
+        assertThat(details.isEnabled).isEqualTo(expectedEnabled)
     }
 }

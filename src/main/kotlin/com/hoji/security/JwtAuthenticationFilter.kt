@@ -20,7 +20,8 @@ class JwtAuthenticationFilter(
         filterChain: FilterChain
     ) {
         resolveToken(request)?.let { token ->
-            if (jwtTokenProvider.validateToken(token)) {
+            // Access 토큰만 인증으로 인정한다. Refresh 토큰을 Authorization 헤더로 보내도 인증되지 않는다.
+            if (jwtTokenProvider.validateToken(token) && jwtTokenProvider.isAccessToken(token)) {
                 SecurityContextHolder.getContext().authentication =
                     jwtTokenProvider.getAuthentication(token)
             }
