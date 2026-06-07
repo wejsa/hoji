@@ -2,9 +2,9 @@
   "metadata": {
     "lastTaskNumber": 7,
     "projectPrefix": "TASK",
-    "version": 50,
+    "version": 51,
     "createdAt": "2026-06-07T00:00:00Z",
-    "updatedAt": "2026-06-07T13:20:00Z"
+    "updatedAt": "2026-06-07T13:30:00Z"
   },
   "summary": {
     "total": 7,
@@ -17,7 +17,7 @@
     "1": {
       "name": "핵심 기능 / 보안 기반",
       "description": "인증·인가 및 핵심 도메인 보안",
-      "status": "todo"
+      "status": "done"
     }
   },
   "tasks": {
@@ -25,33 +25,15 @@
       "id": "TASK-001",
       "title": "인증/인가 시스템 (Spring Security + JWT)",
       "description": "Spring Security + JWT 기반 회원가입·로그인·토큰 재발급·로그아웃 API 및 Role 기반 인가(RBAC) 구현. User에 password(BCrypt)·role 필드 추가.",
-      "status": "in_progress",
+      "status": "done",
       "priority": "high",
       "phase": 1,
       "dependencies": [],
       "specFile": "docs/requirements/TASK-001-spec.md",
-      "assignee": "wejsa-u@hoji-20260607T121400Z",
-      "assignedAt": "2026-06-07T13:10:00Z",
+      "assignee": null,
+      "assignedAt": null,
       "lockTTL": 10800,
-      "lockedFiles": [
-        "build.gradle.kts",
-        "src/main/resources/application.yml",
-        "src/main/kotlin/com/hoji/domain/User.kt",
-        "src/main/kotlin/com/hoji/domain/Role.kt",
-        "src/main/kotlin/com/hoji/domain/RefreshToken.kt",
-        "src/main/kotlin/com/hoji/repository/RefreshTokenRepository.kt",
-        "src/main/kotlin/com/hoji/security/JwtTokenProvider.kt",
-        "src/main/kotlin/com/hoji/security/JwtAuthenticationFilter.kt",
-        "src/main/kotlin/com/hoji/security/JwtAuthenticationEntryPoint.kt",
-        "src/main/kotlin/com/hoji/security/JwtAccessDeniedHandler.kt",
-        "src/main/kotlin/com/hoji/config/SecurityConfig.kt",
-        "src/main/kotlin/com/hoji/service/AuthService.kt",
-        "src/main/kotlin/com/hoji/service/CustomUserDetailsService.kt",
-        "src/main/kotlin/com/hoji/controller/AuthController.kt",
-        "src/main/kotlin/com/hoji/controller/UserController.kt",
-        "src/main/kotlin/com/hoji/controller/dto/AuthDto.kt",
-        "src/main/kotlin/com/hoji/common/dto/ResultCode.kt"
-      ],
+      "lockedFiles": [],
       "steps": [
         {
           "step": 1,
@@ -93,9 +75,10 @@
           "step": 5,
           "title": "기존 API 접근 제어 + e2e 통합 테스트",
           "prLineLimit": 500,
-          "status": "pr_created",
+          "status": "merged",
           "stepNumber": 5,
-          "prNumber": 13
+          "prNumber": 13,
+          "mergedAt": "2026-06-07T13:30:00Z"
         }
       ],
       "currentStep": 5,
@@ -105,7 +88,8 @@
         "lastReviewDecision": "COMMENT",
         "fixLoopCount": 0,
         "prNumber": 12
-      }
+      },
+      "completedAt": "2026-06-07T13:30:00Z"
     },
     "TASK-002": {
       "id": "TASK-002",
@@ -278,10 +262,5 @@
       "completedAt": "2026-06-07T11:10:00Z"
     }
   },
-  "workflowState": {
-    "currentSkill": "crew-review-pr",
-    "lastReviewDecision": "COMMENT",
-    "fixLoopCount": 0,
-    "prNumber": 13
-  }
+  "workflowState": null
 }

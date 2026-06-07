@@ -278,6 +278,20 @@
       "stepNumber": 5,
       "prNumber": 13,
       "detail": "T3 Full COMMENT — CRITICAL 0, MAJOR 4, MINOR 2 (self-PR, 비차단)"
+    },
+    {
+      "timestamp": "2026-06-07T13:30:00Z",
+      "action": "merged",
+      "taskId": "TASK-001",
+      "stepNumber": 5,
+      "prNumber": 13,
+      "detail": "Step 5 squash merged (보안 보강 A1/jti 포함)"
+    },
+    {
+      "timestamp": "2026-06-07T13:30:00Z",
+      "action": "task_completed",
+      "taskId": "TASK-001",
+      "detail": "인증/인가 시스템 완료 (5스텝, PR #3/4/10/12/13). Phase 1 done."
     }
   ]
 }
