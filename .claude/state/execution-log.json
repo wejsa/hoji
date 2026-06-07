@@ -86,6 +86,13 @@
       "taskId": "TASK-004",
       "prNumber": 6,
       "postMergeGate": "BUILD SUCCESSFUL"
+    },
+    {
+      "action": "pr_created",
+      "taskId": "TASK-006",
+      "stepNumber": 1,
+      "prNumber": 7,
+      "timestamp": "2026-06-07T09:31:02Z"
     }
   ]
 }
