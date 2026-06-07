@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "lastTaskNumber": 1,
+    "projectPrefix": "TASK",
+    "version": 1,
+    "createdAt": "2026-06-07T00:00:00Z",
+    "updatedAt": "2026-06-07T00:00:00Z"
+  },
+  "summary": {
+    "total": 1,
+    "done": 0,
+    "inProgress": 0,
+    "review": 0,
+    "todo": 1
+  },
+  "phases": {
+    "1": {
+      "name": "핵심 기능 / 보안 기반",
+      "description": "인증·인가 및 핵심 도메인 보안",
+      "status": "todo"
+    }
+  },
+  "tasks": {
+    "TASK-001": {
+      "id": "TASK-001",
+      "title": "인증/인가 시스템 (Spring Security + JWT)",
+      "description": "Spring Security + JWT 기반 회원가입·로그인·토큰 재발급·로그아웃 API 및 Role 기반 인가(RBAC) 구현. User에 password(BCrypt)·role 필드 추가.",
+      "status": "todo",
+      "priority": "high",
+      "phase": 1,
+      "dependencies": [],
+      "specFile": "docs/requirements/TASK-001-spec.md",
+      "steps": [],
+      "currentStep": 0,
+      "createdAt": "2026-06-07T00:00:00Z"
+    }
+  }
+}
