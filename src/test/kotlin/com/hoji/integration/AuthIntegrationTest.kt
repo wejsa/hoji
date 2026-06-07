@@ -5,6 +5,7 @@ import com.hoji.controller.dto.LoginRequest
 import com.hoji.controller.dto.RefreshRequest
 import com.hoji.controller.dto.SignupRequest
 import com.hoji.controller.dto.TokenResponse
+import com.hoji.controller.dto.UpdateUserRequest
 import com.hoji.domain.Role
 import com.hoji.domain.User
 import com.hoji.domain.UserStatus
@@ -19,8 +20,10 @@ import org.springframework.http.MediaType
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -182,6 +185,69 @@ class AuthIntegrationTest {
         val adminToken = login("admin2", "password123").accessToken
         mockMvc.perform(get("/api/v1/users/${other.id}").header("Authorization", bearer(adminToken)))
             .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `수정(PUT)은 본인은 200, 타인은 403, ADMIN은 타인도 200`() {
+        val me = seedUser("puttarget", "password123", role = Role.USER)
+        val other = seedUser("putvictim", "password123", role = Role.USER)
+        seedUser("putadmin", "password123", role = Role.ADMIN)
+        val body = objectMapper.writeValueAsString(UpdateUserRequest(email = null, name = "Renamed", status = null))
+
+        val ownerToken = login("puttarget", "password123").accessToken
+        mockMvc.perform(
+            put("/api/v1/users/${me.id}").header("Authorization", bearer(ownerToken))
+                .contentType(MediaType.APPLICATION_JSON).content(body)
+        ).andExpect(status().isOk).andExpect(jsonPath("$.data.name").value("Renamed"))
+
+        // 타인 프로필 수정은 거부(IDOR 방어)
+        mockMvc.perform(
+            put("/api/v1/users/${other.id}").header("Authorization", bearer(ownerToken))
+                .contentType(MediaType.APPLICATION_JSON).content(body)
+        ).andExpect(status().isForbidden)
+
+        val adminToken = login("putadmin", "password123").accessToken
+        mockMvc.perform(
+            put("/api/v1/users/${other.id}").header("Authorization", bearer(adminToken))
+                .contentType(MediaType.APPLICATION_JSON).content(body)
+        ).andExpect(status().isOk)
+    }
+
+    @Test
+    fun `본인(USER)이 자기 status를 변경하려 하면 403 — 특권 필드 차단(A1)`() {
+        val me = seedUser("selfstatus", "password123", role = Role.USER)
+        val token = login("selfstatus", "password123").accessToken
+        val body = objectMapper.writeValueAsString(
+            UpdateUserRequest(email = null, name = null, status = UserStatus.DELETED)
+        )
+
+        mockMvc.perform(
+            put("/api/v1/users/${me.id}").header("Authorization", bearer(token))
+                .contentType(MediaType.APPLICATION_JSON).content(body)
+        ).andExpect(status().isForbidden)
+
+        // ADMIN은 status 변경 허용
+        seedUser("statusadmin", "password123", role = Role.ADMIN)
+        val adminToken = login("statusadmin", "password123").accessToken
+        mockMvc.perform(
+            put("/api/v1/users/${me.id}").header("Authorization", bearer(adminToken))
+                .contentType(MediaType.APPLICATION_JSON).content(body)
+        ).andExpect(status().isOk).andExpect(jsonPath("$.data.status").value("DELETED"))
+    }
+
+    @Test
+    fun `삭제(DELETE)는 USER 403, ADMIN 204`() {
+        val target = seedUser("deltarget", "password123", role = Role.USER)
+        seedUser("deluser", "password123", role = Role.USER)
+        seedUser("deladmin", "password123", role = Role.ADMIN)
+
+        val userToken = login("deluser", "password123").accessToken
+        mockMvc.perform(delete("/api/v1/users/${target.id}").header("Authorization", bearer(userToken)))
+            .andExpect(status().isForbidden)
+
+        val adminToken = login("deladmin", "password123").accessToken
+        mockMvc.perform(delete("/api/v1/users/${target.id}").header("Authorization", bearer(adminToken)))
+            .andExpect(status().isNoContent)
     }
 
     // ----- Refresh 회전 / 로그아웃 -----

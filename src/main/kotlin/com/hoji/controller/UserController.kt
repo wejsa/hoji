@@ -1,6 +1,7 @@
 package com.hoji.controller
 
 import com.hoji.common.dto.ApiResponse
+import com.hoji.common.exception.ForbiddenException
 import com.hoji.controller.dto.CreateUserRequest
 import com.hoji.controller.dto.UpdateUserRequest
 import com.hoji.controller.dto.UserResponse
@@ -9,6 +10,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 
 private val logger = KotlinLogging.logger {}
@@ -66,15 +68,22 @@ class UserController(
     }
 
     /**
-     * 사용자 수정 (ADMIN 또는 본인)
+     * 사용자 수정 (ADMIN 또는 본인).
+     *
+     * `status`는 운영자가 통제하는 특권 상태머신 필드이므로 ADMIN만 변경할 수 있다.
+     * 본인(USER) self-edit으로 자기 계정을 INACTIVE/DELETED로 전이시키는 권한 우회를 차단한다.
      */
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.isSelf(#id, authentication)")
     @PutMapping("/{id}")
     fun updateUser(
         @PathVariable id: Long,
-        @Valid @RequestBody request: UpdateUserRequest
+        @Valid @RequestBody request: UpdateUserRequest,
+        authentication: Authentication?
     ): ApiResponse<UserResponse> {
         logger.info { "Updating user: $id" }
+        if (request.status != null && authentication?.authorities?.any { it.authority == ROLE_ADMIN } != true) {
+            throw ForbiddenException("Only ADMIN can change user status")
+        }
         val user = userService.updateUser(id, request)
         return ApiResponse.success(user, "User updated successfully")
     }
@@ -89,5 +98,9 @@ class UserController(
         logger.info { "Deleting user: $id" }
         userService.deleteUser(id)
         return ApiResponse.success(message = "User deleted successfully")
+    }
+
+    companion object {
+        private const val ROLE_ADMIN = "ROLE_ADMIN"
     }
 }
