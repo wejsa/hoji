@@ -270,6 +270,14 @@
       "stepNumber": 5,
       "prNumber": 13,
       "detail": "Step 5 접근제어+e2e PR 생성"
+    },
+    {
+      "timestamp": "2026-06-07T13:20:00Z",
+      "action": "reviewed",
+      "taskId": "TASK-001",
+      "stepNumber": 5,
+      "prNumber": 13,
+      "detail": "T3 Full COMMENT — CRITICAL 0, MAJOR 4, MINOR 2 (self-PR, 비차단)"
     }
   ]
 }
